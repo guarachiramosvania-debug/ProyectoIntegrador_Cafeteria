@@ -1,0 +1,18 @@
+using Postgrest.Attributes;
+using Postgrest.Models;
+
+namespace ProyectoIntegrador_Cafeteria.Negocio.Modelos
+{
+    [Table("producto_insumo")]
+    public class ProductoInsumo : BaseModel
+    {
+        [PrimaryKey("id_producto")]
+        public long IdProducto { get; set; }
+
+        [PrimaryKey("id_insumo")]
+        public long IdInsumo { get; set; }
+
+        [Column("cantidad")]
+        public decimal Cantidad { get; set; }
+    }
+}
