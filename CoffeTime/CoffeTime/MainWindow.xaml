@@ -7,6 +7,12 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Button Content="Probar Supabase" 
+        Width="180" 
+        Height="50"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Click="ProbarSupabase_Click"/>
 
     </Grid>
 </Window>
