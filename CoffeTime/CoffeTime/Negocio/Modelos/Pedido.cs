@@ -1,5 +1,5 @@
-using Postgrest.Attributes;
-using Postgrest.Models;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 using System;
 
 namespace ProyectoIntegrador_Cafeteria.Negocio.Modelos

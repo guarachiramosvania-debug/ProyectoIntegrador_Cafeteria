@@ -12,7 +12,8 @@
         Height="50"
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
-        Click="ProbarSupabase_Click"/>
+      Click="ProbarSupabase_Click"
+/>
 
     </Grid>
 </Window>

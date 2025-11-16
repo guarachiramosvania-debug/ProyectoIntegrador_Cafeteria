@@ -4,5 +4,8 @@ namespace ProyectoIntegrador_Cafeteria.Datos.Repositorios
 {
     public class InsumoRepository : BaseRepository<Producto>
     {
+        public InsumoRepository()
+        {
+        }
     }
 }

@@ -3,6 +3,5 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Login" Height="450" Width="800">
     <Grid Background="#FFF5F5F5">
-        <!-- UI irá aquí -->
     </Grid>
 </Window>
