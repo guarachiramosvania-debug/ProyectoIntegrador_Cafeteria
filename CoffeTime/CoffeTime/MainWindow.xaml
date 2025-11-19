@@ -8,6 +8,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Button Content="Probar Supabase" 
+                Style="{StaticResource MainButton}"
         Width="180" 
         Height="50"
         HorizontalAlignment="Center"
