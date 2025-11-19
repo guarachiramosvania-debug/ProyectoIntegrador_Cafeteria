@@ -1,9 +1,9 @@
-using ProyectoIntegrador_Cafeteria.Datos.Conexion;
+using CoffeTime.Datos.Conexion;
 using Supabase.Postgrest.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ProyectoIntegrador_Cafeteria.Datos.Repositorios
+namespace CoffeTime.Datos.Repositorios
 {
     public class BaseRepository<T> where T : BaseModel, new()
     {

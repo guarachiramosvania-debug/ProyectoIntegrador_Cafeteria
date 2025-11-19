@@ -1,5 +1,5 @@
-﻿using ProyectoIntegrador_Cafeteria.Datos.Conexion;
-using ProyectoIntegrador_Cafeteria.Datos.Repositorios;
+﻿using CoffeTime.Datos.Conexion;
+using CoffeTime.Datos.Repositorios;
 using System.Windows;
 
 namespace CoffeTime

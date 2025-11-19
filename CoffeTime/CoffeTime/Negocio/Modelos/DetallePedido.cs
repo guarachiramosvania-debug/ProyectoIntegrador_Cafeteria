@@ -1,7 +1,7 @@
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 
-namespace ProyectoIntegrador_Cafeteria.Negocio.Modelos
+namespace CoffeTime.Negocio.Modelos
 {
     [Table("detalle_pedido")]
     public class DetallePedido : BaseModel

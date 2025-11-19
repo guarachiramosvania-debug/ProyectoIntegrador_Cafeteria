@@ -1,34 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CoffeTime.Datos.Repositorios;
+using CoffeTime.Negocio.Modelos;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace CoffeTime.Presentacion.Views
 {
-    /// <summary>
-    /// Interaction logic for ProveedoresView.xaml
-    /// </summary>
     public partial class ProveedoresView : UserControl
     {
+        private readonly ProveedorRepository _repo = new ProveedorRepository();
+
         public ProveedoresView()
         {
             InitializeComponent();
+            CargarProveedores();
+        }
 
-            ListaProveedores.ItemsSource = new List<dynamic>
+        private async void CargarProveedores()
         {
-            new { Nombre="Café Premium S.A.", ContactoNombre="Juan Pérez", Email="ventas@cafepremium.com", Telefono="+1234567890", FechaRegistro="31/12/2024" },
-            new { Nombre="Lácteos del Valle", ContactoNombre="Ana García", Email="pedidos@lacteosvalle.com", Telefono="+1234567891", FechaRegistro="31/12/2024" },
-            new { Nombre="Dulces y Postres", ContactoNombre="Roberto Sánchez", Email="contacto@dulcesypostres.com", Telefono="+1234567892", FechaRegistro="31/12/2024" }
-        };
+            var lista = await _repo.GetAll();
+            ListaProveedores.ItemsSource = lista;
+        }
+
+        private void NuevoProveedor_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Abrir formulario de Nuevo Proveedor");
+            // Aquí después se agregará un formulario real
+        }
+
+        private async void EliminarProveedor_Click(object sender, RoutedEventArgs e)
+        {
+            var id = int.Parse(((Button)sender).Tag.ToString());
+
+            if (MessageBox.Show("¿Eliminar proveedor?", "Confirmar",
+               MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                await _repo.Delete(id);
+                CargarProveedores();
+            }
+        }
+
+        private void EditarProveedor_Click(object sender, RoutedEventArgs e)
+        {
+            var id = int.Parse(((Button)sender).Tag.ToString());
+            MessageBox.Show($"Editar proveedor ID: {id}");
+            // Aquí luego abrimos un form de edición
         }
     }
 }

@@ -1,14 +1,16 @@
-using ProyectoIntegrador_Cafeteria.Negocio.Modelos;
+using CoffeTime.Datos.Conexion;
+using CoffeTime.Negocio.Modelos;
 using Supabase;
 
 public class PedidoRepository
 {
     private readonly Supabase.Client _client;
 
-    public PedidoRepository(Supabase.Client client)
+    public PedidoRepository(Supabase.Client client = null)
     {
-        _client = client;
+        _client = client ?? SupabaseContext.Client;
     }
+
 
     public async Task<long> CrearPedido(Pedido pedido)
     {
@@ -56,4 +58,14 @@ public class PedidoRepository
             .Where(p => p.IdPedido == idPedido)
             .Update(pedido);
     }
+    public async Task<List<Pedido>> GetAll()
+    {
+        var result = await _client
+            .From<Pedido>()
+            .Select("*")
+            .Get();
+
+        return result.Models;
+    }
+
 }

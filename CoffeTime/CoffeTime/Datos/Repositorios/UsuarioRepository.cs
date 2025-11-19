@@ -1,6 +1,6 @@
-using ProyectoIntegrador_Cafeteria.Negocio.Modelos;
+using CoffeTime.Negocio.Modelos;
 
-namespace ProyectoIntegrador_Cafeteria.Datos.Repositorios
+namespace CoffeTime.Datos.Repositorios
 {
     public class UsuarioRepository : BaseRepository<Producto>
     {

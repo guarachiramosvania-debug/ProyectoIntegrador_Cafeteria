@@ -1,6 +1,6 @@
 using Supabase;
 
-namespace ProyectoIntegrador_Cafeteria.Datos.Conexion
+namespace CoffeTime.Datos.Conexion
 {
     public static class SupabaseContext
     {

@@ -2,7 +2,7 @@ using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 using System;
 
-namespace ProyectoIntegrador_Cafeteria.Negocio.Modelos
+namespace CoffeTime.Negocio.Modelos
 {
     [Table("movimiento_inventario")]
     public class MovimientoInventario : BaseModel

@@ -1,7 +1,6 @@
-using ProyectoIntegrador_Cafeteria.Negocio.Modelos;
+using CoffeTime.Negocio.Modelos;
 using Supabase;
 
-namespace ProyectoIntegrador_Cafeteria.Datos.Repositorios;
 
 public class InsumoRepository
 {
