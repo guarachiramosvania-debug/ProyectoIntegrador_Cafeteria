@@ -1,12 +1,161 @@
-﻿<Window x:Class="CoffeTime.Presentacion.Views.ProveedoresView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CoffeTime.Presentacion.Views"
-        mc:Ignorable="d"
-        Title="ProveedoresView" Height="450" Width="800">
-    <Grid>
-        
+﻿<UserControl x:Class="CoffeTime.Presentacion.Views.ProveedoresView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BackgroundBrush}">
+
+    <Grid Margin="30">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!-- ============================
+             TÍTULO
+        ============================ -->
+        <TextBlock Text="Gestión de Proveedores"
+                   Style="{StaticResource TitleText}" />
+
+        <TextBlock Text="Administra los proveedores de insumos"
+                   Style="{StaticResource SubtitleText}"
+                   Margin="0,5,0,20"
+                   Grid.Row="1"/>
+
+        <!-- ============================
+             BOTÓN NUEVO PROVEEDOR
+        ============================ -->
+        <Button Content="  +  Nuevo Proveedor"
+                Grid.Row="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Style="{StaticResource MainButton}"
+                Margin="0,34,-8,0" Grid.RowSpan="2"/>
+
+        <!-- ============================
+             LISTA DE PROVEEDORES (CARDS)
+        ============================ -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <ItemsControl x:Name="ListaProveedores">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"
+                                   ItemWidth="330"
+                                   ItemHeight="200"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <!-- TEMPLATE DE CADA CARD -->
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+
+                        <Border Style="{StaticResource CardStyle}"
+                                Width="330" Height="200">
+
+                            <Grid Margin="10">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- ICONO + Nombre empresa -->
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Border Background="#FFF4D6"
+                                            CornerRadius="8"
+                                            Width="40" Height="40"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+
+                                        <TextBlock Text="📦"
+                                                   FontSize="22"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+
+                                    <StackPanel Margin="10,0,0,0">
+                                        <TextBlock Text="{Binding Nombre}"
+                                                   FontSize="16"
+                                                   FontWeight="Bold"
+                                                   Foreground="{StaticResource TextDarkBrush}"/>
+
+                                        <TextBlock Text="{Binding ContactoNombre}"
+                                                   Foreground="{StaticResource TextLightBrush}"
+                                                   FontSize="13"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- ICONOS EDITAR / BORRAR -->
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Right"
+                                            Margin="0,0,5,0">
+
+                                    <Button Content="✎"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            FontSize="16"
+                                            Cursor="Hand"/>
+
+                                    <Button Content="🗑"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            FontSize="16"
+                                            Margin="5,0,0,0"
+                                            Cursor="Hand"/>
+                                </StackPanel>
+
+                                <!-- EMAIL -->
+                                <StackPanel Orientation="Horizontal"
+                                            Grid.Row="1"
+                                            Margin="0,10,0,0">
+                                    <TextBlock Text="✉"
+                                               Margin="0,0,10,0"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Email}"
+                                               VerticalAlignment="Center"
+                                               Foreground="{StaticResource TextDarkBrush}"/>
+                                </StackPanel>
+
+                                <!-- TELÉFONO -->
+                                <StackPanel Orientation="Horizontal"
+                                            Grid.Row="1"
+                                            Margin="0,35,0,0">
+                                    <TextBlock Text="☎"
+                                               Margin="0,0,10,0"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Telefono}"
+                                               VerticalAlignment="Center"
+                                               Foreground="{StaticResource TextDarkBrush}"/>
+                                </StackPanel>
+
+                                <!-- LÍNEA SEPARADORA -->
+                                <Rectangle Grid.Row="2"
+                                           Height="1"
+                                           Fill="{StaticResource BorderBrush}"
+                                           Margin="0,10,0,10"/>
+
+                                <!-- FECHA REGISTRO -->
+                                <StackPanel Grid.Row="3">
+                                    <TextBlock Text="Registrado:"
+                                               Foreground="{StaticResource TextLightBrush}"
+                                               FontSize="12"/>
+                                    <TextBlock Text="{Binding FechaRegistro}"
+                                               Foreground="{StaticResource TextDarkBrush}"
+                                               FontSize="12"/>
+                                </StackPanel>
+
+                            </Grid>
+
+                        </Border>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
+            </ItemsControl>
+        </ScrollViewer>
+
     </Grid>
-</Window>
+
+</UserControl>

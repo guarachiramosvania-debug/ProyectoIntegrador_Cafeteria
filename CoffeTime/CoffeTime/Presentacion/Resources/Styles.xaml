@@ -5,7 +5,6 @@
          COLORES PRINCIPALES
     ============================ -->
     <Color x:Key="PrimaryColor">#D88A1A</Color>
-    <!-- Naranja café -->
     <Color x:Key="PrimaryDark">#BF7812</Color>
     <Color x:Key="BackgroundColor">#FAF8F2</Color>
     <!-- Fondo general -->
