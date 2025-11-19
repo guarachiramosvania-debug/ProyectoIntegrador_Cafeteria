@@ -9,7 +9,7 @@ namespace CoffeTime.Negocio.Modelos
     [Table("proveedores")]
     public class Proveedor : BaseModel
     {
-        [PrimaryKey("id")]
+        [PrimaryKey("id_proveedor")]
         public int Id { get; set; }
 
         [Column("nombre")]

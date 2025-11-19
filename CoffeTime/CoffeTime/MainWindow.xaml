@@ -15,6 +15,11 @@
         VerticalAlignment="Center"
       Click="ProbarSupabase_Click"
 />
+        <Button x:Name="btnProveedores"
+        Content="Proveedores"
+        Margin="557,165,54,175"
+        Padding="10"
+        Click="BtnProveedores_Click"/>
 
     </Grid>
 </Window>

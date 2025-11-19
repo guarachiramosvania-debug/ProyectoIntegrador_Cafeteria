@@ -1,5 +1,6 @@
 ﻿using CoffeTime.Datos.Conexion;
 using CoffeTime.Datos.Repositorios;
+using CoffeTime.Presentacion.Views;
 using System.Windows;
 
 namespace CoffeTime
@@ -26,5 +27,10 @@ namespace CoffeTime
             }
         }
 
+        private void BtnProveedores_Click(object sender, RoutedEventArgs e)
+        {
+            var ventana = new ProveedoresView();
+            ventana.Show();
+        }
     }
 }

@@ -1,13 +1,12 @@
 ﻿using CoffeTime.Datos.Repositorios;
 using CoffeTime.Negocio.Modelos;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace CoffeTime.Presentacion.Views
 {
-    public partial class ProveedoresView : UserControl
+    public partial class ProveedoresView : Window
     {
-        private readonly ProveedorRepository _repo = new ProveedorRepository();
+        private readonly ProveedorRepository repo = new ProveedorRepository();
 
         public ProveedoresView()
         {
@@ -17,33 +16,45 @@ namespace CoffeTime.Presentacion.Views
 
         private async void CargarProveedores()
         {
-            var lista = await _repo.GetAll();
-            ListaProveedores.ItemsSource = lista;
+            var lista = await repo.GetAll();
+            listaProveedores.ItemsSource = lista;
         }
 
-        private void NuevoProveedor_Click(object sender, RoutedEventArgs e)
+        private async void EliminarProveedor(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Abrir formulario de Nuevo Proveedor");
-            // Aquí después se agregará un formulario real
-        }
+            int id = int.Parse((sender as FrameworkElement).Tag.ToString());
 
-        private async void EliminarProveedor_Click(object sender, RoutedEventArgs e)
-        {
-            var id = int.Parse(((Button)sender).Tag.ToString());
-
-            if (MessageBox.Show("¿Eliminar proveedor?", "Confirmar",
-               MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show("¿Deseas eliminar este proveedor?",
+                                "Confirmar",
+                                MessageBoxButton.YesNo,
+                                MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                await _repo.Delete(id);
+                await repo.Delete(id);
                 CargarProveedores();
             }
         }
 
-        private void EditarProveedor_Click(object sender, RoutedEventArgs e)
+        private void EditarProveedor(object sender, RoutedEventArgs e)
         {
-            var id = int.Parse(((Button)sender).Tag.ToString());
-            MessageBox.Show($"Editar proveedor ID: {id}");
-            // Aquí luego abrimos un form de edición
+            int id = int.Parse((sender as FrameworkElement).Tag.ToString());
+            var ventana = new ProveedorFormulario(id);
+            ventana.ShowDialog();
+            CargarProveedores();
         }
+
+        private void btnNuevo_Click(object sender, RoutedEventArgs e)
+        {
+            var ventana = new ProveedorFormulario(null);
+            ventana.ShowDialog();
+            CargarProveedores();
+        }
+
+        private void BtnNuevoProveedor_Click(object sender, RoutedEventArgs e)
+        {
+            var ventana = new ProveedorFormulario(null); // null = nuevo proveedor
+            if (ventana.ShowDialog() == true)
+                CargarProveedores(); // refresca la lista
+        }
+
     }
 }

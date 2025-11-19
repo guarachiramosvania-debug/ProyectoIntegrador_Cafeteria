@@ -45,7 +45,6 @@ namespace CoffeTime.Datos.Repositorios
         }
 
         // Eliminar proveedor
-        // Eliminar proveedor
         public async Task<bool> Delete(int id)
         {
             await _client
@@ -53,7 +52,17 @@ namespace CoffeTime.Datos.Repositorios
                 .Where(p => p.Id == id)
                 .Delete();
 
-            return true; // Asumimos éxito si no hubo excepción
+            return true;
+        }
+
+        public async Task<Proveedor?> GetById(int id)
+        {
+            var result = await _client
+                .From<Proveedor>()
+                .Where(p => p.Id == id)
+                .Single();
+
+            return result;
         }
 
     }
