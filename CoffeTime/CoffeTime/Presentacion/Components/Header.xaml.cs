@@ -11,13 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
 namespace CoffeTime.Presentacion.Components
 {
-    /// <summary>
-    /// Lógica de interacción para Header.xaml
-    /// </summary>
-    public partial class Header : Window
+    public partial class Header : UserControl
     {
         public Header()
         {

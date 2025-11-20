@@ -1,7 +1,7 @@
 ﻿<Window x:Class="CoffeTime.Presentacion.Views.ProveedoresView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:comp="clr-namespace:CoffeTime.Presentacion.Components"
+xmlns:comp="clr-namespace:CoffeTime.Presentacion.Components"
 
         Title="Gestión de Proveedores"
         Width="1100"
@@ -24,6 +24,7 @@
         <!-- =======================
               HEADER GLOBAL
         ======================== -->
+        <comp:Header Grid.Row="0"/>
 
         <!-- =======================
               CONTENIDO PRINCIPAL
