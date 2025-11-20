@@ -6,7 +6,173 @@
         xmlns:local="clr-namespace:CoffeTime.Presentacion.Views"
         mc:Ignorable="d"
         Title="ProductosView" Height="450" Width="800">
+  <Window.Resources>
+        <ResourceDictionary Source="pack://application:,,,/CoffeTime;component/Resources/Styles.xaml"/>
+    </Window.Resources>
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" 
+                Background="{StaticResource PanelBrush}" 
+                BorderBrush="#e0e0e0" 
+                BorderThickness="0,0,0,1">
+            <DockPanel Height="60">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Margin="20,0,40,0" VerticalAlignment="Center">
+                    <Image Source="/Resources/logo.png" Height="30"/>
+                    <TextBlock Text="CoffeeTime" FontWeight="Bold" FontSize="16" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Left">
+                    <Button Content="&#xf0e4; Dashboard" Style="{StaticResource NavButton}" FontFamily="FontAwesome"/>
+                    <Button Content="&#xf0c0; Usuarios" Style="{StaticResource NavButton}" FontFamily="FontAwesome"/>
+                    <Button Content="&#xf0f4; Productos" Style="{StaticResource NavButton}" Background="{StaticResource PrimaryBrush}" Foreground="White" FontFamily="FontAwesome"/>
+                    <Button Content="&#xf07a; Pedidos" Style="{StaticResource NavButton}" FontFamily="FontAwesome"/>
+                    <Button Content="&#xf46c; Inventario" Style="{StaticResource NavButton}" FontFamily="FontAwesome"/>
+                    <Button Content="&#xf2b5; Proveedores" Style="{StaticResource NavButton}" FontFamily="FontAwesome"/>
+                    <Button Content="&#xf080; Reportes" Style="{StaticResource NavButton}" FontFamily="FontAwesome"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center">
+                    <TextBlock Text="Carlos Administrador" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                    <Button Content="&#xf08b; Salir" Style="{StaticResource PrimaryButton}" Background="Red" FontFamily="FontAwesome" Padding="10,5"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Margin="40" VerticalAlignment="Top">
+                <DockPanel Margin="0,0,0,20">
+                    <Button Content="&#x2b; Nuevo Producto" DockPanel.Dock="Right" Style="{StaticResource PrimaryButton}" 
+                            Command="{Binding AddProductCommand}" FontFamily="FontAwesome"/>
+                    <StackPanel>
+                        <TextBlock Text="Gestión de Productos" Style="{StaticResource H1Style}"/>
+                        <TextBlock Text="Administra el catálogo de productos" Style="{StaticResource H2Style}" Margin="0,0,0,0"/>
+                    </StackPanel>
+                </DockPanel>
+
+                <Border Style="{StaticResource CardPanel}" Padding="15" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.Column="0" Source="ruta/a/espresso.jpg" Height="50" Width="50" Margin="0,0,15,0"/>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Espresso" FontWeight="SemiBold" FontSize="16"/>
+                            <TextBlock Text="Café espresso italiano intenso y aromático" Foreground="#8a8a8a"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Bebidas Calientes" FontSize="12" Margin="0,5,10,0"/>
+                                <TextBlock Text="1 insumos" FontSize="12" Foreground="#8a8a8a" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="$2.50" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Top"/>
+                    </Grid>
+                </Border>
+                
+                <Border Style="{StaticResource CardPanel}" Padding="15" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.Column="0" Source="ruta/a/cappuccino.jpg" Height="50" Width="50" Margin="0,0,15,0"/>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Cappuccino" FontWeight="SemiBold" FontSize="16"/>
+                            <TextBlock Text="Espresso con espuma de leche cremosa" Foreground="#8a8a8a"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Bebidas Calientes" FontSize="12" Margin="0,5,10,0"/>
+                                <TextBlock Text="2 insumos" FontSize="12" Foreground="#8a8a8a" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="$3.50" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Top"/>
+                    </Grid>
+                </Border>
+                
+                <Border Style="{StaticResource CardPanel}" Padding="15" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.Column="0" Source="ruta/a/latte.jpg" Height="50" Width="50" Margin="0,0,15,0"/>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Latte" FontWeight="SemiBold" FontSize="16"/>
+                            <TextBlock Text="Café con leche suave y sedoso" Foreground="#8a8a8a"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Bebidas Calientes" FontSize="12" Margin="0,5,10,0"/>
+                                <TextBlock Text="2 insumos" FontSize="12" Foreground="#8a8a8a" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="$3.75" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Top"/>
+                    </Grid>
+                </Border>
+                
+                <Border Style="{StaticResource CardPanel}" Padding="15" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.Column="0" Source="ruta/a/mocha.jpg" Height="50" Width="50" Margin="0,0,15,0"/>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Mocha" FontWeight="SemiBold" FontSize="16"/>
+                            <TextBlock Text="Café con chocolate y crema batida" Foreground="#8a8a8a"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Bebidas Calientes" FontSize="12" Margin="0,5,10,0"/>
+                                <TextBlock Text="4 insumos" FontSize="12" Foreground="#8a8a8a" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="$4.25" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Top"/>
+                    </Grid>
+                </Border>
+                
+                <Border Style="{StaticResource CardPanel}" Padding="15" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.Column="0" Source="ruta/a/americano.jpg" Height="50" Width="50" Margin="0,0,15,0"/>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Americano" FontWeight="SemiBold" FontSize="16"/>
+                            <TextBlock Text="Espresso alargado con agua caliente" Foreground="#8a8a8a"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Bebidas Calientes" FontSize="12" Margin="0,5,10,0"/>
+                                <TextBlock Text="1 insumo" FontSize="12" Foreground="#8a8a8a" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="$2.75" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Top"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <Border Grid.Column="1" Style="{StaticResource CardPanel}" Margin="0,40,40,40" VerticalAlignment="Center">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Selecciona un producto para ver sus detalles" Foreground="#8a8a8a" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <Border Width="100" Height="100" BorderBrush="#e0e0e0" BorderThickness="1" CornerRadius="5" Background="#f8f8f8">
+                        <TextBlock Text="&#xf466;" FontFamily="FontAwesome" FontSize="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#cccccc"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </Window>
