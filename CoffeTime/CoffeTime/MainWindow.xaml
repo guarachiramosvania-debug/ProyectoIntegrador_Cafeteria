@@ -20,6 +20,11 @@
         Margin="557,165,54,175"
         Padding="10"
         Click="BtnProveedores_Click"/>
+        <Button x:Name="btnusuarios"
+  Content="Usuarios"
+  Margin="55,78,556,262"
+  Padding="10"
+  Click="btnUsuarios"/>
 
     </Grid>
 </Window>

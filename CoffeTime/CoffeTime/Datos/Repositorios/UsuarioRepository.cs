@@ -9,6 +9,10 @@ namespace CoffeTime.Datos.Repositorios
     {
         private readonly Client _client;
 
+        public UsuarioRepository()
+        {
+        }
+
         public UsuarioRepository(Client client)
         {
             _client = client;
@@ -71,6 +75,11 @@ namespace CoffeTime.Datos.Repositorios
             {
                 return new List<Usuario>();
             }
+        }
+
+        internal async Task GetAll()
+        {
+            throw new NotImplementedException();
         }
     }
 }

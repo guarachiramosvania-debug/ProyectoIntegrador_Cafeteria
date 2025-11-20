@@ -17,9 +17,8 @@ namespace CoffeTime
             try
             {
                 var repo = new UsuarioRepository();
-                var usuarios = await repo.GetAll();
+                var usuarios = repo.GetAll();
 
-                MessageBox.Show($"Conexión OK ✔\nUsuarios en la base: {usuarios.Count}");
             }
             catch (Exception ex)
             {
@@ -30,6 +29,12 @@ namespace CoffeTime
         private void BtnProveedores_Click(object sender, RoutedEventArgs e)
         {
             var ventana = new ProveedoresView();
+            ventana.Show();
+        }
+
+        private void btnUsuarios(object sender, RoutedEventArgs e)
+        {
+            var ventana = new UsuariosView();
             ventana.Show();
         }
     }

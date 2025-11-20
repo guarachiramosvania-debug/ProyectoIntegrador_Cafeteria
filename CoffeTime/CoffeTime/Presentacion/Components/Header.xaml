@@ -1,7 +1,63 @@
-<Window x:Class="CoffeTime.Presentacion.Views.Header"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Login" Height="450" Width="800">
-    <Grid Background="#FFF5F5F5">
-    </Grid>
-</Window>
+﻿<UserControl x:Class="CoffeTime.Presentacion.Components.Header"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="70" Background="White">
+
+    <Border Background="White"
+            BorderBrush="#E6D5B8"
+            BorderThickness="0,0,0,1">
+
+        <Grid Margin="20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="180"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- LOGO -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Image Source="/Resources/logo.png" Width="45" Height="45" Margin="0,0,10,0"/>
+                <StackPanel>
+                    <TextBlock Text="CoffeeTime" FontWeight="Bold" FontSize="16" Foreground="#8B5E34"/>
+                    <TextBlock Text="Sistema de Gestión" FontSize="11" Foreground="Gray"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- MENÚ PRINCIPAL -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal"
+                        VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                <!-- Cada botón usa margin para simular spacing -->
+                <Button Content="🏠 Dashboard"  Tag="Dashboard"   Style="{StaticResource MenuButtonStyle}" Margin="10,0"/>
+                <Button Content="👥 Usuarios"    Tag="Usuarios"    Style="{StaticResource MenuButtonStyle}" Margin="10,0"/>
+                <Button Content="🍪 Productos"   Tag="Productos"   Style="{StaticResource MenuButtonStyle}" Margin="10,0"/>
+                <Button Content="🛒 Pedidos"     Tag="Pedidos"     Style="{StaticResource MenuButtonStyle}" Margin="10,0"/>
+                <Button Content="📦 Inventario"  Tag="Inventario"  Style="{StaticResource MenuButtonStyle}" Margin="10,0"/>
+                <Button Content="🤝 Proveedores" Tag="Proveedores" Style="{StaticResource MenuButtonStyle}" Margin="10,0"/>
+                <Button Content="📊 Reportes"    Tag="Reportes"    Style="{StaticResource MenuButtonStyle}" Margin="10,0"/>
+
+            </StackPanel>
+
+            <!-- PERFIL + LOGOUT -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" 
+                        VerticalAlignment="Center" HorizontalAlignment="Right">
+
+                <StackPanel Margin="0,0,10,0">
+                    <TextBlock Text="Carlos Administrador" FontWeight="Bold" HorizontalAlignment="Right"/>
+                    <TextBlock Text="Administrador" FontSize="11" Foreground="Gray" HorizontalAlignment="Right"/>
+                </StackPanel>
+
+                <Border Background="#E53935" CornerRadius="6">
+                    <Button Content="🔓 Salir"
+                            Background="Transparent"
+                            Foreground="White"
+                            Padding="10 4"
+                            BorderThickness="0"/>
+                </Border>
+
+            </StackPanel>
+
+        </Grid>
+    </Border>
+
+</UserControl>

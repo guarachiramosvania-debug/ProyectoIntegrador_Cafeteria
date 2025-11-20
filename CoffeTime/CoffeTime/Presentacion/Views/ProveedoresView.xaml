@@ -1,103 +1,119 @@
 ﻿<Window x:Class="CoffeTime.Presentacion.Views.ProveedoresView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:comp="clr-namespace:CoffeTime.Presentacion.Components"
+
         Title="Gestión de Proveedores"
         Width="1100"
         Height="700"
         Background="#FFF8F4E9"
         WindowStartupLocation="CenterScreen">
 
-    <ScrollViewer>
-        <StackPanel Margin="30">
+    <Grid>
 
-            <!-- Título -->
-            <TextBlock Text="Gestión de Proveedores"
-                       FontSize="32"
-                       FontWeight="Bold"
-                       Foreground="#7B4F1D"/>
+        <!-- =======================
+             FILAS DEL LAYOUT
+        ======================== -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Header -->
+            <RowDefinition Height="*"/>
+            <!-- Contenido -->
+        </Grid.RowDefinitions>
 
-            <TextBlock Text="Administra los proveedores de insumos"
-                       FontSize="16"
-                       Margin="0,5,0,25"
-                       Foreground="#937755"/>
+        <!-- =======================
+              HEADER GLOBAL
+        ======================== -->
 
-            <!-- BOTÓN NUEVO PROVEEDOR -->
-            <Button x:Name="btnNuevo"
-                    Content="➕  Nuevo Proveedor"
-                    HorizontalAlignment="Left"
-                    Padding="20,10"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    Background="#DA8A2D"
-                    Cursor="Hand"
-                    Margin="0,0,0,20"
-                       Click="BtnNuevoProveedor_Click"/>
+        <!-- =======================
+              CONTENIDO PRINCIPAL
+        ======================== -->
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Margin="30">
 
+                <!-- Título -->
+                <TextBlock Text="Gestión de Proveedores"
+                           FontSize="32"
+                           FontWeight="Bold"
+                           Foreground="#7B4F1D"/>
 
-            <!-- LISTADO DE PROVEEDORES -->
-            <ItemsControl x:Name="listaProveedores">
+                <TextBlock Text="Administra los proveedores de insumos"
+                           FontSize="16"
+                           Margin="0,5,0,25"
+                           Foreground="#937755"/>
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
+                <!-- BOTON NUEVO-->
+                <Button x:Name="btnNuevo"
+                        Content="➕  Nuevo Proveedor"
+                        HorizontalAlignment="Left"
+                        Padding="20,10"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Background="#DA8A2D"
+                        Cursor="Hand"
+                        Margin="0,0,0,20"
+                        Click="BtnNuevoProveedor_Click"/>
 
-                        <Border CornerRadius="12"
-                                Padding="15"
-                                Margin="0,0,0,15"
-                                BorderBrush="#E8D5B5"
-                                BorderThickness="1"
-                                Background="White">
+                <!-- LISTADO PROVEEDORES -->
+                <ItemsControl x:Name="listaProveedores">
 
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="50"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="80"/>
-                                </Grid.ColumnDefinitions>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
 
-                                <!-- ICONO -->
-                                <StackPanel Orientation="Horizontal">
+                            <Border CornerRadius="12"
+                                    Padding="15"
+                                    Margin="0,0,0,15"
+                                    BorderBrush="#E8D5B5"
+                                    BorderThickness="1"
+                                    Background="White">
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- ICONO -->
                                     <Ellipse Width="40"
                                              Height="40"
                                              Fill="#F6E5B3"/>
-                                </StackPanel>
 
-                                <!-- DATOS DEL PROVEEDOR -->
-                                <StackPanel Grid.Column="1" Margin="15,0,0,0">
-                                    <TextBlock Text="{Binding Nombre}"
-                                               FontSize="18"
-                                               FontWeight="Bold"
-                                               Foreground="#7B4F1D"/>
-                                    <TextBlock Text="{Binding Contacto}" Foreground="#6A6A6A"/>
-                                    <TextBlock Text="{Binding Email}" Foreground="#6A6A6A"/>
-                                    <TextBlock Text="{Binding Telefono}" Foreground="#6A6A6A"/>
-                                </StackPanel>
+                                    <!-- DATOS -->
+                                    <StackPanel Grid.Column="1" Margin="15,0,0,0">
+                                        <TextBlock Text="{Binding Nombre}" FontSize="18" FontWeight="Bold" Foreground="#7B4F1D"/>
+                                        <TextBlock Text="{Binding Contacto}" Foreground="#6A6A6A"/>
+                                        <TextBlock Text="{Binding Email}" Foreground="#6A6A6A"/>
+                                        <TextBlock Text="{Binding Telefono}" Foreground="#6A6A6A"/>
+                                    </StackPanel>
 
-                                <!-- BOTONES -->
-                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                    <!-- BOTONES -->
+                                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
 
-                                    <Button Content="✏ Editar"
-                                            Tag="{Binding Id}"
-                                            Click="EditarProveedor"
-                                            Background="#FDECC2"
-                                            BorderBrush="#C9A96D"
-                                            Margin="0,0,0,5"/>
+                                        <Button Content="✏ Editar"
+                                                Tag="{Binding Id}"
+                                                Click="EditarProveedor"
+                                                Background="#FDECC2"
+                                                BorderBrush="#C9A96D"
+                                                Margin="0,0,0,5"/>
 
-                                    <Button Content="🗑 Eliminar"
-                                            Tag="{Binding Id}"
-                                            Click="EliminarProveedor"
-                                            Background="#F8C4C4"
-                                            BorderBrush="#DB6E6E"/>
-                                </StackPanel>
+                                        <Button Content="🗑 Eliminar"
+                                                Tag="{Binding Id}"
+                                                Click="EliminarProveedor"
+                                                Background="#F8C4C4"
+                                                BorderBrush="#DB6E6E"/>
+                                    </StackPanel>
 
-                            </Grid>
+                                </Grid>
+                            </Border>
 
-                        </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
+            </StackPanel>
+        </ScrollViewer>
 
-            </ItemsControl>
+    </Grid>
 
-        </StackPanel>
-    </ScrollViewer>
 </Window>
