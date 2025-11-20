@@ -1,5 +1,7 @@
+﻿// ProyectoIntegrador_Cafeteria.Negocio.Modelos.Usuario.cs
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
+using System; // ← necesario para DateTime
 
 namespace ProyectoIntegrador_Cafeteria.Negocio.Modelos
 {
@@ -26,5 +28,8 @@ namespace ProyectoIntegrador_Cafeteria.Negocio.Modelos
 
         [Column("estado")]
         public bool Estado { get; set; }
+
+        [Column("fecha_creacion")]
+        public DateTime FechaCreacion { get; set; }
     }
 }

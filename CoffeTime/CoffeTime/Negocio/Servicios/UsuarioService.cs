@@ -1,6 +1,6 @@
 using CoffeTime.Datos.Repositorios;
-using CoffeTime.Negocio.Modelos;
 using ProyectoIntegrador_Cafeteria.Negocio.Modelos;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CoffeTime.Negocio.Servicios
@@ -14,6 +14,17 @@ namespace CoffeTime.Negocio.Servicios
             _usuarioRepository = usuarioRepository;
         }
 
+        /// <summary>
+        /// Obtiene todos los usuarios activos e inactivos desde la base de datos.
+        /// </summary>
+        public async Task<List<Usuario>> ObtenerTodosAsync()
+        {
+            return await _usuarioRepository.ObtenerTodosAsync();
+        }
+
+        /// <summary>
+        /// Crea un nuevo usuario con validaciones.
+        /// </summary>
         public async Task<(bool exito, string mensaje)> CrearUsuarioAsync(Usuario usuario)
         {
             if (string.IsNullOrWhiteSpace(usuario.NombreUsuario) ||
@@ -25,9 +36,12 @@ namespace CoffeTime.Negocio.Servicios
                 return (false, "Nombre de usuario ya existe");
 
             var creado = await _usuarioRepository.CrearUsuarioAsync(usuario);
-            return (creado, creado ? "Usuario creado" : "Error al crear usuario");
+            return (creado, creado ? "Usuario creado exitosamente." : "Error al crear usuario.");
         }
 
+        /// <summary>
+        /// Autentica un usuario por nombre de usuario y contraseña.
+        /// </summary>
         public async Task<Usuario?> AutenticarAsync(string nombreUsuario, string contrasena)
         {
             var usuario = await _usuarioRepository.ObtenerPorNombreUsuarioAsync(nombreUsuario);

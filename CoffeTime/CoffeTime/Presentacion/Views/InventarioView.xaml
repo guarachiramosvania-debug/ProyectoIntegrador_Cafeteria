@@ -3,10 +3,101 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CoffeTime.Presentacion.Views"
         mc:Ignorable="d"
-        Title="InventarioView" Height="450" Width="800">
-    <Grid>
-        
+        Title="Gestión de Inventario" Height="700" Width="1000"
+        Background="{StaticResource BackgroundBrush}">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Título + Botón -->
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <TextBlock Style="{StaticResource TitleText}" Text="Gestión de Inventario"/>
+            <TextBlock Style="{StaticResource SubtitleText}" Text="Administra los insumos y stock" Margin="10,4,0,0"/>
+        </StackPanel>
+
+        <Button Style="{StaticResource MainButton}"
+                Grid.Row="0"
+                HorizontalAlignment="Right"
+                Padding="12,6"
+                Click="BtnRegistrarEntrada_Click">
+            + Registrar Entrada
+        </Button>
+
+        <!-- Contenido principal -->
+        <Grid Grid.Row="1" Margin="0,15,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Inventario Actual -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Inventario Actual" FontWeight="Bold" Margin="10,0,0,10"/>
+                    <DataGrid x:Name="DataGridInventarioActual"
+                              Style="{StaticResource ModernDataGrid}"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              IsReadOnly="True"
+                              SelectionUnit="FullRow"
+                              Margin="0,0,0,10">
+
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#FFF3D4"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
+                                <Setter Property="Padding" Value="10,5"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Insumo" Width="2*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="📦" FontSize="16" Margin="0,0,8,0"/>
+                                            <TextBlock Text="{Binding Nombre}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" Width="*"/>
+                            <DataGridTextColumn Header="Min" Binding="{Binding Minimo}" Width="*"/>
+
+                            <DataGridTemplateColumn Header="Estado" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border x:Name="BadgeEstado" Padding="6,3" CornerRadius="10" HorizontalAlignment="Left">
+                                            <TextBlock Text="OK" FontWeight="SemiBold" FontSize="13"/>
+                                        </Border>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Estado}" Value="Alerta">
+                                                <Setter TargetName="BadgeEstado" Property="Background" Value="#FFD8D8"/>
+                                                <Setter TargetName="BadgeEstado" Property="BorderBrush" Value="#FF9999"/>
+                                                <Setter TargetName="BadgeEstado" Property="TextBlock.Text" Value="ALERTA"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Border>
+
+            <!-- Historial de Entradas -->
+            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                <TextBlock Text="Historial de Entradas" FontWeight="Bold" Margin="10,0,0,10"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="StackHistorial" Margin="0,0,0,10"/>
+                </ScrollViewer>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

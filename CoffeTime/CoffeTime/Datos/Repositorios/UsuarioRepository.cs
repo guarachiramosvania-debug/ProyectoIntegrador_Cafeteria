@@ -1,6 +1,6 @@
-using CoffeTime.Negocio.Modelos; // o ProyectoIntegrador_Cafeteria.Negocio.Modelos
-using ProyectoIntegrador_Cafeteria.Negocio.Modelos;
+using ProyectoIntegrador_Cafeteria.Negocio.Modelos; // ? Solo este using
 using Supabase;
+using System.Collections.Generic; // ?? ¡Importante!
 using System.Threading.Tasks;
 
 namespace CoffeTime.Datos.Repositorios
@@ -56,6 +56,20 @@ namespace CoffeTime.Datos.Repositorios
             catch
             {
                 return null;
+            }
+        }
+
+        // ?????? AÑADE ESTE MÉTODO AQUÍ ??????
+        public async Task<List<Usuario>> ObtenerTodosAsync()
+        {
+            try
+            {
+                var response = await _client.From<Usuario>().Get();
+                return response.Models; // ? Correcto
+            }
+            catch
+            {
+                return new List<Usuario>();
             }
         }
     }
