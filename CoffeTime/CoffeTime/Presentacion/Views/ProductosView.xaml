@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BackgroundBrush}">
     <Window.Resources>
-        <ResourceDictionary Source="/Resources/Styles.xaml"/>
+        <ResourceDictionary Source="/CoffeTime;component/Presentacion/Resources/Styles.xaml"/>
     </Window.Resources>
 
     <Grid>
@@ -25,7 +25,7 @@
                 BorderThickness="0,0,0,1">
             <DockPanel Height="60">
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Margin="20,0,40,0" VerticalAlignment="Center">
-                    <Image Source="/Resources/logo.png" Height="30"/>
+                    <Image Source="/CoffeTime;component/Presentacion/Resources/logo.png" Height="30"/>
                     <TextBlock Text="CoffeeTime" 
                                FontWeight="Bold" 
                                FontSize="16" 

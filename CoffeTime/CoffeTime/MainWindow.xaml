@@ -26,5 +26,13 @@
   Padding="10"
   Click="btnUsuarios"/>
 
+
+
+
+        <Button x:Name="btnDashboard"
+ Content="Dashbpard"
+ Margin="45,307,566,33"
+ Padding="10"
+ Click="btndashboard"/>
     </Grid>
 </Window>

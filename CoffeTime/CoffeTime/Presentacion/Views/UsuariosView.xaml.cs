@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using ProyectoIntegrador_Cafeteria.Negocio.Modelos;
+using CoffeTime.Negocio.Modelos;
 using CoffeTime.Negocio.Servicios;
 using CoffeTime.Datos.Repositorios;
 
@@ -20,8 +20,7 @@ namespace CoffeTime.Presentacion.Views
         {
             try
             {
-                // ✅ Ahora App.SupabaseClient existe
-                var repo = new UsuarioRepository(App.SupabaseClient);
+                var repo = new UsuarioRepository();
                 var service = new UsuarioService(repo);
 
                 var usuarios = await service.ObtenerTodosAsync();
@@ -41,6 +40,7 @@ namespace CoffeTime.Presentacion.Views
                 MessageBox.Show($"Error: {ex.Message}");
             }
         }
+
 
         // Botones
         private void BtnNuevo_Click(object sender, RoutedEventArgs e) => MessageBox.Show("Nuevo");

@@ -1,17 +1,34 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-namespace CoffeTime.Presentacion.ViewModels
+using CoffeTime.Presentacion.Commands;
+
+namespace CoffeTime.Presentacion.Views
 {
-    // Clase base para implementar INotifyPropertyChanged
+    public partial class DashboardView : Window
+    {
+        public DashboardView()
+        {
+            InitializeComponent();
+
+            // 🔥 Asignar el ViewModel interno como DataContext
+            DataContext = new DashboardViewModel();
+
+            // 🔥 Cargar datos al abrir
+            var vm = (DashboardViewModel)DataContext;
+            vm.LoadDashboardDataCommand.Execute(null);
+        }
+    }
+
+    // ---------------------------------------------------------
+    //  AQUI ESTÁ TU VIEWMODEL (lo dejamos dentro del mismo archivo)
+    // ---------------------------------------------------------
+
     public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -21,19 +38,15 @@ namespace CoffeTime.Presentacion.ViewModels
     public class DashboardViewModel : ViewModelBase
     {
         // ======================================
-        // PROPIEDADES (Indicadores del Dashboard)
+        // PROPIEDADES
         // ======================================
+
         private decimal _ventasDelDia;
         public decimal VentasDelDia
         {
             get => _ventasDelDia;
-            set
-            {
-                _ventasDelDia = value;
-                OnPropertyChanged();
-            }
+            set { _ventasDelDia = value; OnPropertyChanged(); }
         }
-        // ... (Otras propiedades de PedidosDelDia y AlertasDeStock, como antes)
 
         private int _pedidosDelDia;
         public int PedidosDelDia
@@ -46,22 +59,13 @@ namespace CoffeTime.Presentacion.ViewModels
         public int AlertasDeStock
         {
             get => _alertasDeStock;
-            set
-            {
-                _alertasDeStock = value;
-                OnPropertyChanged();
-                if (value > 0)
-                {
-                    // Usar MessageBox.Show directamente si se permite en el VM.
-                    // En MVVM estricto, esto usaría un servicio.
-                    MessageBox.Show($"¡ATENCIÓN! Hay {value} insumos con stock bajo.", "Alerta de Stock", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-            }
+            set { _alertasDeStock = value; OnPropertyChanged(); }
         }
 
         // ======================================
         // COMANDOS
         // ======================================
+
         public ICommand LoadDashboardDataCommand { get; private set; }
         public ICommand LogoutCommand { get; private set; }
         public ICommand NewQuickOrderCommand { get; private set; }
@@ -72,11 +76,9 @@ namespace CoffeTime.Presentacion.ViewModels
         public ICommand NavigateToSuppliersCommand { get; private set; }
         public ICommand NavigateToReportsCommand { get; private set; }
 
-
         public DashboardViewModel()
         {
-            // Inicialización de comandos usando RelayCommand (ahora accesible)
-            LoadDashboardDataCommand = new RelayCommand(ExecuteLoadDashboardData, CanExecuteLoadDashboardData);
+            LoadDashboardDataCommand = new RelayCommand(ExecuteLoadDashboardData);
             LogoutCommand = new RelayCommand(ExecuteLogout);
             NewQuickOrderCommand = new RelayCommand(ExecuteNewQuickOrder);
 
@@ -89,46 +91,54 @@ namespace CoffeTime.Presentacion.ViewModels
         }
 
         // ======================================
-        // MÉTODOS DE LÓGICA Y NAVEGACIÓN
+        // LÓGICA
         // ======================================
-
-        private bool CanExecuteLoadDashboardData(object parameter) => true;
 
         private void ExecuteLoadDashboardData(object parameter)
         {
             try
             {
-                // Lógica de validación (ej. permisos)
-                // if (!User.HasPermission("DashboardRead")) throw new UnauthorizedAccessException("Permisos insuficientes.");
-
-                // Lógica de obtención de datos
-                VentasDelDia = GetVentasHoy();
-                PedidosDelDia = GetPedidosHoy();
-                AlertasDeStock = GetAlertasStock();
+                VentasDelDia = 450.75m;
+                PedidosDelDia = 12;
+                AlertasDeStock = 3;
             }
             catch (Exception ex)
             {
-                // Manejo de errores (try-catch)
-                MessageBox.Show($"Error al cargar el resumen: {ex.Message}", "Error de Carga", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error al cargar el resumen: {ex.Message}",
+                    "Error de Carga", MessageBoxButton.OK, MessageBoxImage.Error);
+
                 VentasDelDia = 0;
                 PedidosDelDia = 0;
                 AlertasDeStock = 0;
             }
         }
 
-        // Métodos de simulación (reemplazar con llamadas a servicios)
-        private decimal GetVentasHoy() => 450.75m;
-        private int GetPedidosHoy() => 12;
-        private int GetAlertasStock() => 3;
+        // ======================================
+        // ACCIONES Y NAVEGACIÓN
+        // ======================================
 
-        // Métodos de navegación (Ejemplo con MessageBox.Show)
-        private void ExecuteLogout(object parameter) => MessageBox.Show("Cerrando sesión...", "Acción");
-        private void ExecuteNewQuickOrder(object parameter) => MessageBox.Show("Abriendo formulario de Pedido Rápido.", "Acción");
-        private void ExecuteNavigateToUsers(object parameter) => MessageBox.Show("Navegando a la Gestión de Usuarios.", "Navegación");
-        private void ExecuteNavigateToProducts(object parameter) => MessageBox.Show("Navegando a la Gestión de Productos.", "Navegación");
-        private void ExecuteNavigateToOrders(object parameter) => MessageBox.Show("Navegando a la Gestión de Pedidos.", "Navegación");
-        private void ExecuteNavigateToInventory(object parameter) => MessageBox.Show("Navegando a la Gestión de Inventario.", "Navegación");
-        private void ExecuteNavigateToSuppliers(object parameter) => MessageBox.Show("Navegando a la Gestión de Proveedores.", "Navegación");
-        private void ExecuteNavigateToReports(object parameter) => MessageBox.Show("Navegando a la Gestión de Reportes.", "Navegación");
+        private void ExecuteLogout(object parameter)
+            => MessageBox.Show("Cerrando sesión...");
+
+        private void ExecuteNewQuickOrder(object parameter)
+            => MessageBox.Show("Abriendo formulario de Pedido Rápido.");
+
+        private void ExecuteNavigateToUsers(object parameter)
+            => MessageBox.Show("Navegando a la Gestión de Usuarios.");
+
+        private void ExecuteNavigateToProducts(object parameter)
+            => MessageBox.Show("Navegando a la Gestión de Productos.");
+
+        private void ExecuteNavigateToOrders(object parameter)
+            => MessageBox.Show("Navegando a la Gestión de Pedidos.");
+
+        private void ExecuteNavigateToInventory(object parameter)
+            => MessageBox.Show("Navegando a la Gestión de Inventario.");
+
+        private void ExecuteNavigateToSuppliers(object parameter)
+            => MessageBox.Show("Navegando a la Gestión de Proveedores.");
+
+        private void ExecuteNavigateToReports(object parameter)
+            => MessageBox.Show("Navegando a la Gestión de Reportes.");
     }
 }

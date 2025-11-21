@@ -14,16 +14,7 @@ namespace CoffeTime
 
         private async void ProbarSupabase_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                var repo = new UsuarioRepository();
-                var usuarios = repo.GetAll();
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("❌ Error:\n" + ex.Message);
-            }
+         
         }
 
         private void BtnProveedores_Click(object sender, RoutedEventArgs e)
@@ -37,5 +28,16 @@ namespace CoffeTime
             var ventana = new UsuariosView();
             ventana.Show();
         }
+
+        private void btndashboard(object sender, RoutedEventArgs e)
+        {
+            DashboardView dash = new DashboardView();
+
+            Application.Current.MainWindow = dash;
+
+            dash.Show();
+            this.Close();
+        }
+
     }
 }
