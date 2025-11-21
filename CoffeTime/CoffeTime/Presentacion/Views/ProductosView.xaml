@@ -5,8 +5,142 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoffeTime.Presentacion.Views"
         mc:Ignorable="d"
-        Title="ProductosView" Height="450" Width="800">
+        Title="ProductosView" Height="900" Width="1400"
+        MinHeight="700" MinWidth="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundBrush}">
+    <Window.Resources>
+        <ResourceDictionary Source="/Resources/Styles.xaml"/>
+    </Window.Resources>
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" 
+                Background="{StaticResource CardBrush}" 
+                BorderBrush="{StaticResource BorderBrush}" 
+                BorderThickness="0,0,0,1">
+            <DockPanel Height="60">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Margin="20,0,40,0" VerticalAlignment="Center">
+                    <Image Source="/Resources/logo.png" Height="30"/>
+                    <TextBlock Text="CoffeeTime" 
+                               FontWeight="Bold" 
+                               FontSize="16" 
+                               Margin="5,0,0,0"
+                               Foreground="{StaticResource TextDarkBrush}"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Left">
+                    <Button Content="Dashboard" Style="{StaticResource MenuButtonStyle}"/>
+                    <Button Content="Usuarios" Style="{StaticResource MenuButtonStyle}"/>
+                    <Button Content="Productos" Style="{StaticResource MenuButtonStyle}" Background="{StaticResource PrimaryDarkBrush}" Foreground="White"/>
+                    <Button Content="Pedidos" Style="{StaticResource MenuButtonStyle}"/>
+                    <Button Content="Inventario" Style="{StaticResource MenuButtonStyle}"/>
+                    <Button Content="Proveedores" Style="{StaticResource MenuButtonStyle}"/>
+                    <Button Content="Reportes" Style="{StaticResource MenuButtonStyle}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center">
+                    <TextBlock Text="Carlos Administrador" VerticalAlignment="Center" Margin="0,0,15,0" Foreground="{StaticResource TextDarkBrush}"/>
+                    <Button Content="Salir" Style="{StaticResource MainButton}" Background="Red" Padding="10,5"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Margin="40" VerticalAlignment="Top">
+                <DockPanel Margin="0,0,0,20">
+                    <Button Content="+ Nuevo Producto" DockPanel.Dock="Right" 
+                            Style="{StaticResource MainButton}" 
+                            Command="{Binding AddProductCommand}"/>
+                    <StackPanel>
+                        <TextBlock Text="Gestión de Productos" Style="{StaticResource TitleText}"/>
+                        <TextBlock Text="Administra el catálogo de productos" Style="{StaticResource SubtitleText}" Margin="0,0,0,0"/>
+                    </StackPanel>
+                </DockPanel>
+
+                <Border Style="{StaticResource CardStyle}" Padding="15" Margin="8,0,8,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Rectangle Grid.Column="0" Fill="#EAEAEA" Height="50" Width="50" Margin="0,0,15,0" RadiusX="5" RadiusY="5"/>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Espresso" FontWeight="SemiBold" FontSize="16" Foreground="{StaticResource TextDarkBrush}"/>
+                            <TextBlock Text="Café espresso italiano intenso y aromático" Foreground="{StaticResource TextLightBrush}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Bebidas Calientes" FontSize="12" Margin="0,5,10,0" Foreground="{StaticResource TextLightBrush}"/>
+                                <TextBlock Text="1 insumo" FontSize="12" Foreground="{StaticResource TextLightBrush}" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="$2.50" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" Foreground="{StaticResource TextDarkBrush}"/>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource CardStyle}" Padding="15" Margin="8,0,8,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Rectangle Grid.Column="0" Fill="#EAEAEA" Height="50" Width="50" Margin="0,0,15,0" RadiusX="5" RadiusY="5"/>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Cappuccino" FontWeight="SemiBold" FontSize="16" Foreground="{StaticResource TextDarkBrush}"/>
+                            <TextBlock Text="Espresso con espuma de leche cremosa" Foreground="{StaticResource TextLightBrush}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Bebidas Calientes" FontSize="12" Margin="0,5,10,0" Foreground="{StaticResource TextLightBrush}"/>
+                                <TextBlock Text="2 insumos" FontSize="12" Foreground="{StaticResource TextLightBrush}" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="$3.50" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" Foreground="{StaticResource TextDarkBrush}"/>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource CardStyle}" Padding="15" Margin="8,0,8,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Rectangle Grid.Column="0" Fill="#EAEAEA" Height="50" Width="50" Margin="0,0,15,0" RadiusX="5" RadiusY="5"/>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Latte" FontWeight="SemiBold" FontSize="16" Foreground="{StaticResource TextDarkBrush}"/>
+                            <TextBlock Text="Café con leche suave y sedoso" Foreground="{StaticResource TextLightBrush}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Bebidas Calientes" FontSize="12" Margin="0,5,10,0" Foreground="{StaticResource TextLightBrush}"/>
+                                <TextBlock Text="2 insumos" FontSize="12" Foreground="{StaticResource TextLightBrush}" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="$3.75" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" Foreground="{StaticResource TextDarkBrush}"/>
+                    </Grid>
+                </Border>
+
+            </StackPanel>
+
+            <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="8,40,40,40" VerticalAlignment="Center">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Selecciona un producto para ver sus detalles" Foreground="{StaticResource TextLightBrush}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <Border Width="100" Height="100" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="5" Background="#f8f8f8">
+                        <TextBlock Text="[Icono]" Foreground="#cccccc" FontSize="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

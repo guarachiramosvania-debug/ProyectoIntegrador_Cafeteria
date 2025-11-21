@@ -5,8 +5,180 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoffeTime.Presentacion.Views"
         mc:Ignorable="d"
-        Title="DashboardView" Height="450" Width="800">
+        Title="DashboardView" Height="200" Width="1000"
+        MinHeight="700" MinWidth="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundBrush}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="NavButton" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
+                <Setter Property="Padding" Value="10,5"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#FFEFD6"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="ActiveNavButton" TargetType="Button" BasedOn="{StaticResource NavButton}">
+                <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Margin" Value="0,0,5,0"/>
+                <Setter Property="Padding" Value="10,5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{StaticResource PrimaryDarkBrush}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="H1Style" TargetType="TextBlock" BasedOn="{StaticResource TitleText}">
+                <Setter Property="FontSize" Value="28"/>
+                <Setter Property="Margin" Value="0,0,0,5"/>
+            </Style>
+
+            <Style x:Key="H2Style" TargetType="TextBlock" BasedOn="{StaticResource SubtitleText}">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Margin" Value="0,0,0,20"/>
+            </Style>
+
+            <SolidColorBrush x:Key="WarningBrush" Color="#FFC107"/>
+
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource CardBrush}" BorderThickness="0,0,0,1" BorderBrush="{StaticResource BorderBrush}">
+            <DockPanel Height="60" Margin="20,0">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center">
+                    <Image Source="pack://application:,,,/CoffeTime;component/Resources/logo.png" Height="30" Margin="0,0,5,0"/>
+                    <StackPanel>
+                        <TextBlock Text="CoffeeTime" FontWeight="Bold" FontSize="16" Foreground="{StaticResource TextDarkBrush}"/>
+                        <TextBlock Text="Sistema de Gestión" FontSize="10" Foreground="{StaticResource TextLightBrush}" Margin="0,-2,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Center">
+                    <Button Content="Dashboard" Style="{StaticResource ActiveNavButton}" Command="{Binding NavigateToDashboardCommand}" Margin="0,0,5,0"/>
+                    <Button Content="Usuarios" Style="{StaticResource NavButton}" Command="{Binding NavigateToUsersCommand}"/>
+                    <Button Content="Productos" Style="{StaticResource NavButton}" Command="{Binding NavigateToProductsCommand}"/>
+                    <Button Content="Pedidos" Style="{StaticResource NavButton}" Command="{Binding NavigateToOrdersCommand}"/>
+                    <Button Content="Inventario" Style="{StaticResource NavButton}" Command="{Binding NavigateToInventoryCommand}"/>
+                    <Button Content="Proveedores" Style="{StaticResource NavButton}" Command="{Binding NavigateToSuppliersCommand}"/>
+                    <Button Content="Reportes" Style="{StaticResource NavButton}" Command="{Binding NavigateToReportsCommand}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock Text="Carlos Administrador" FontSize="14" Foreground="{StaticResource TextDarkBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <Button Content="Salir" Style="{StaticResource MainButton}" Background="Red" Padding="15,5" Command="{Binding LogoutCommand}"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" Padding="40" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="Dashboard" Style="{StaticResource H1Style}"/>
+                <TextBlock Text="Resumen de operaciones del día" Style="{StaticResource H2Style}"/>
+
+                <Grid Margin="0,0,0,40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,20,0" Padding="20">
+                        <DockPanel>
+                            <TextBlock Text="$" DockPanel.Dock="Right" FontSize="20" Foreground="{StaticResource TextDarkBrush}" VerticalAlignment="Top"/>
+                            <StackPanel>
+                                <TextBlock Text="Ventas del Día" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextDarkBrush}"/>
+                                <TextBlock Text="{Binding VentasDelDia, StringFormat='C2'}" FontSize="36" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"/>
+                                <TextBlock Text="Actualizado en tiempo real" FontSize="12" Foreground="{StaticResource TextLightBrush}"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="0,0,20,0" Padding="20">
+                        <DockPanel>
+                            <TextBlock Text="🛒" DockPanel.Dock="Right" FontSize="20" Foreground="{StaticResource PrimaryBrush}" VerticalAlignment="Top"/>
+                            <StackPanel>
+                                <TextBlock Text="Pedidos del Día" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextDarkBrush}"/>
+                                <TextBlock Text="{Binding PedidosDelDia}" FontSize="36" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"/>
+                                <TextBlock Text="Pedidos completados" FontSize="12" Foreground="{StaticResource TextLightBrush}"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="0,0,289,0" Padding="20" Grid.ColumnSpan="2">
+                        <DockPanel>
+                            <TextBlock Text="⚠️" DockPanel.Dock="Right" FontSize="20" Foreground="{StaticResource WarningBrush}" VerticalAlignment="Top"/>
+                            <StackPanel>
+                                <TextBlock Text="Alertas de Stock" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextDarkBrush}"/>
+                                <TextBlock Text="{Binding AlertasDeStock}" FontSize="36" FontWeight="Bold" Foreground="{StaticResource WarningBrush}"/>
+                                <TextBlock Text="Insumos con stock bajo" FontSize="12" Foreground="{StaticResource TextLightBrush}"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+
+                    <Button Grid.Column="3" Style="{StaticResource MainButton}" Background="{StaticResource PrimaryDarkBrush}"
+                            Command="{Binding NewQuickOrderCommand}" Margin="82,-15,10,92">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="➕" FontSize="10" Foreground="White" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Nuevo Pedido Rápido" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+
+                <TextBlock Text="Acceso Rápido" Style="{StaticResource H2Style}"/>
+
+                <WrapPanel Margin="0,10,0,0">
+                    <Button Style="{StaticResource MainButton}" 
+                            Background="{StaticResource CardBrush}"
+                            BorderThickness="1" BorderBrush="{StaticResource BorderBrush}"
+                            Width="200" Height="100" Margin="0,0,20,0"
+                            Command="{Binding NavigateToOrdersCommand}">
+                        <StackPanel>
+                            <TextBlock Text="🛒" FontSize="36" Foreground="{StaticResource PrimaryBrush}" FontFamily="FontAwesome"/>
+                            <TextBlock Text="Pedidos" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextDarkBrush}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Style="{StaticResource MainButton}" 
+                            Background="{StaticResource CardBrush}"
+                            BorderThickness="1" BorderBrush="{StaticResource BorderBrush}"
+                            Width="200" Height="100" 
+                            Command="{Binding NavigateToInventoryCommand}">
+                        <StackPanel>
+                            <TextBlock Text="⚠️" FontSize="36" Foreground="{StaticResource WarningBrush}" FontFamily="FontAwesome"/>
+                            <TextBlock Text="Inventario" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextDarkBrush}"/>
+                        </StackPanel>
+                    </Button>
+                </WrapPanel>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>

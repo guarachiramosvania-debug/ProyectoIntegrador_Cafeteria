@@ -6,7 +6,72 @@
         xmlns:local="clr-namespace:CoffeTime.Presentacion.Views"
         mc:Ignorable="d"
         Title="LoginView" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="ModernPasswordBox" TargetType="{x:Type PasswordBox}">
+                <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
+                <Setter Property="Padding" Value="8"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type PasswordBox}">
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="6"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <ScrollViewer Margin="2" x:Name="PART_ContentHost"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="PlaceholderTextBlock" TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="{StaticResource TextLightBrush}"/>
+                <Setter Property="IsHitTestVisible" Value="False"/>
+                <Setter Property="Margin" Value="15,0,0,0"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="DockPanel.Dock" Value="Left"/>
+                <Setter Property="Opacity" Value="0.7"/>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Border Style="{StaticResource CardStyle}" Width="350" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel>
+
+            <Image Source="pack://application:,,,/CoffeTime;component/Resources/logo.png" 
+                   Height="80" Margin="0,0,0,10" HorizontalAlignment="Center"/>
+
+            <TextBlock Text="CoffeeTime" Style="{StaticResource TitleText}" HorizontalAlignment="Center"/>
+            <TextBlock Text="Sistema de Gestión" Style="{StaticResource SubtitleText}" HorizontalAlignment="Center" Margin="0,0,0,30"/>
+
+            <TextBlock Text="Usuario" FontWeight="SemiBold" Margin="5,0,0,5" Foreground="{StaticResource TextDarkBrush}"/>
+            <Grid>
+                <TextBox x:Name="UsernameTextBox" Style="{StaticResource ModernTextBox}" Padding="10,8"/>
+                <TextBlock Text=" Ingrese su usuario" Style="{StaticResource PlaceholderTextBlock}" FontFamily="FontAwesome"/>
+            </Grid>
+
+            <TextBlock Text="Contraseña" FontWeight="SemiBold" Margin="5,20,0,5" Foreground="{StaticResource TextDarkBrush}"/>
+            <Grid>
+                <PasswordBox x:Name="PasswordPasswordBox" Style="{StaticResource ModernPasswordBox}" Padding="10,8"/>
+                <TextBlock Text=" Ingrese su contraseña" Style="{StaticResource PlaceholderTextBlock}" FontFamily="FontAwesome"/>
+            </Grid>
+
+            <Button Content=" Iniciar Sesión" Style="{StaticResource MainButton}" 
+                    Padding="20,10" Margin="5,30,5,0"
+                    Click="LoginButton_Click"
+                    FontFamily="FontAwesome"/>
+
+            <Rectangle Height="20" Fill="Transparent"/>
+
+        </StackPanel>
+    </Border>
 </Window>
