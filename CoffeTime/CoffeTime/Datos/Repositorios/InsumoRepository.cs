@@ -1,54 +1,57 @@
+using CoffeTime.Datos.Conexion;
 using CoffeTime.Negocio.Modelos;
 using Supabase;
-
 
 public class InsumoRepository
 {
     private readonly Client _client;
 
-    public InsumoRepository(Client client)
+    public InsumoRepository()
     {
-        _client = client;
+        _client = SupabaseContext.Client; // <-- USAR CLIENTE GLOBAL FUNCIONAL
     }
 
-    /// <summary>
-    /// Obtiene un insumo por su ID (usa el campo IdInsumo como clave primaria)
-    /// </summary>
-    public async Task<Insumo?> ObtenerPorId(long idInsumo)
+    public async Task<List<Insumo>> ObtenerTodosAsync()
     {
         try
         {
-            var response = await _client
-                .From<Insumo>()
-                .Where(x => x.IdInsumo == idInsumo)
-                .Single();
-
-            return response;
+            var result = await _client.From<Insumo>().Get();
+            return result.Models;
         }
         catch
         {
-            // Si no encuentra o hay error, devuelve null
+            return new List<Insumo>();
+        }
+    }
+
+    public async Task<Insumo?> ObtenerPorId(long id)
+    {
+        try
+        {
+            return await _client.From<Insumo>()
+                               .Where(x => x.IdInsumo == id)
+                               .Single();
+        }
+        catch
+        {
             return null;
         }
     }
 
-    /// <summary>
-    /// Actualiza el stock_actual de un insumo
-    /// </summary>
-    public async Task<bool> ActualizarStock(long idInsumo, decimal nuevoStock)
+    public async Task<bool> ActualizarStock(long id, decimal stock)
     {
-        var insumo = await ObtenerPorId(idInsumo);
-        if (insumo == null) return false;
+        var ins = await ObtenerPorId(id);
 
-        // Solo actualizamos el campo stock_actual
-        insumo.StockActual = nuevoStock;
+        if (ins == null) return false;
+
+        ins.StockActual = stock;
 
         try
         {
-            await _client
-                .From<Insumo>()
-                .Where(x => x.IdInsumo == idInsumo)
-                .Update(insumo);
+            await _client.From<Insumo>()
+                         .Where(x => x.IdInsumo == id)
+                         .Update(ins);
+
             return true;
         }
         catch

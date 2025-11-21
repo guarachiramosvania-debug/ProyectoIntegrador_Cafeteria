@@ -3,41 +3,67 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:comp="clr-namespace:CoffeTime.Presentacion.Components"
+        xmlns:conv="clr-namespace:CoffeTime.Presentacion.Converters"
         mc:Ignorable="d"
         Title="Gestión de Inventario" Height="700" Width="1000"
         Background="{StaticResource BackgroundBrush}">
 
+    <!-- REGISTRO DEL CONVERTER -->
+    <Window.Resources>
+        <conv:EstadoColorConverter x:Key="EstadoColorConverter" />
+    </Window.Resources>
+
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- HEADER -->
+            <RowDefinition Height="Auto"/>
+            <!-- TÍTULO + BOTÓN -->
             <RowDefinition Height="*"/>
+            <!-- CONTENIDO -->
         </Grid.RowDefinitions>
 
-        <!-- Título + Botón -->
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <TextBlock Style="{StaticResource TitleText}" Text="Gestión de Inventario"/>
-            <TextBlock Style="{StaticResource SubtitleText}" Text="Administra los insumos y stock" Margin="10,4,0,0"/>
-        </StackPanel>
+        <!-- HEADER GLOBAL -->
+        <comp:Header Grid.Row="0" />
 
-        <Button Style="{StaticResource MainButton}"
-                Grid.Row="0"
-                HorizontalAlignment="Right"
-                Padding="12,6"
-                Click="BtnRegistrarEntrada_Click">
-            + Registrar Entrada
-        </Button>
+        <!-- Título + botón -->
+        <Grid Grid.Row="1" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- Contenido principal -->
-        <Grid Grid.Row="1" Margin="0,15,0,0">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Style="{StaticResource TitleText}" Text="Gestión de Inventario"/>
+                <TextBlock Style="{StaticResource SubtitleText}"
+                           Text="Administra los insumos y stock"
+                           Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <Button Style="{StaticResource MainButton}"
+                    Grid.Column="1"
+                    Padding="12,6"
+                    Margin="10,0,0,0"
+                    Click="BtnRegistrarEntrada_Click">
+                + Registrar Entrada
+            </Button>
+        </Grid>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <Grid Grid.Row="2" Margin="0,15,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Inventario Actual -->
+            <!-- INVENTARIO ACTUAL -->
             <Border Style="{StaticResource CardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Inventario Actual" FontWeight="Bold" Margin="10,0,0,10"/>
+                    <TextBlock Text="Inventario Actual"
+                               FontWeight="Bold"
+                               Margin="10,0,0,10"/>
+
                     <DataGrid x:Name="DataGridInventarioActual"
                               Style="{StaticResource ModernDataGrid}"
                               AutoGenerateColumns="False"
@@ -56,33 +82,44 @@
                         </DataGrid.ColumnHeaderStyle>
 
                         <DataGrid.Columns>
+                            <!-- Nombre insumo -->
                             <DataGridTemplateColumn Header="Insumo" Width="2*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <TextBlock Text="📦" FontSize="16" Margin="0,0,8,0"/>
-                                            <TextBlock Text="{Binding Nombre}" VerticalAlignment="Center"/>
+                                        <StackPanel Orientation="Horizontal"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock Text="📦"
+                                                       FontSize="16"
+                                                       Margin="0,0,8,0"/>
+                                            <TextBlock Text="{Binding Nombre}"
+                                                       VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" Width="*"/>
-                            <DataGridTextColumn Header="Min" Binding="{Binding Minimo}" Width="*"/>
+                            <!-- Stock -->
+                            <DataGridTextColumn Header="Stock"
+                                                Binding="{Binding Stock}"
+                                                Width="*"/>
 
+                            <!-- Mínimo -->
+                            <DataGridTextColumn Header="Min"
+                                                Binding="{Binding Minimo}"
+                                                Width="*"/>
+
+                            <!-- Estado -->
                             <DataGridTemplateColumn Header="Estado" Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Border x:Name="BadgeEstado" Padding="6,3" CornerRadius="10" HorizontalAlignment="Left">
-                                            <TextBlock Text="OK" FontWeight="SemiBold" FontSize="13"/>
+                                        <Border Padding="6,3"
+                                                CornerRadius="10"
+                                                HorizontalAlignment="Left"
+                                                Background="{Binding Estado, Converter={StaticResource EstadoColorConverter}}">
+                                            <TextBlock Text="{Binding Estado}"
+                                                       FontWeight="SemiBold"
+                                                       FontSize="13"/>
                                         </Border>
-                                        <DataTemplate.Triggers>
-                                            <DataTrigger Binding="{Binding Estado}" Value="Alerta">
-                                                <Setter TargetName="BadgeEstado" Property="Background" Value="#FFD8D8"/>
-                                                <Setter TargetName="BadgeEstado" Property="BorderBrush" Value="#FF9999"/>
-                                                <Setter TargetName="BadgeEstado" Property="TextBlock.Text" Value="ALERTA"/>
-                                            </DataTrigger>
-                                        </DataTemplate.Triggers>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -91,9 +128,11 @@
                 </StackPanel>
             </Border>
 
-            <!-- Historial de Entradas -->
+            <!-- HISTORIAL -->
             <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                <TextBlock Text="Historial de Entradas" FontWeight="Bold" Margin="10,0,0,10"/>
+                <TextBlock Text="Historial de Entradas"
+                           FontWeight="Bold"
+                           Margin="10,0,0,10"/>
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel x:Name="StackHistorial" Margin="0,0,0,10"/>
                 </ScrollViewer>

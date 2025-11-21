@@ -1,6 +1,6 @@
-﻿// MovimientoInventarioRepository.cs
-using CoffeTime.Negocio.Modelos; // Asegúrate de que MovimientoInventario esté aquí
+﻿using CoffeTime.Negocio.Modelos;
 using Supabase;
+using CoffeTime.Datos.Conexion;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +9,11 @@ namespace CoffeTime.Datos.Repositorios
     public class MovimientoInventarioRepository
     {
         private readonly Client _client;
+
+        public MovimientoInventarioRepository()
+        {
+            _client = SupabaseContext.Client;
+        }
 
         public MovimientoInventarioRepository(Client client)
         {
@@ -28,7 +33,6 @@ namespace CoffeTime.Datos.Repositorios
             }
         }
 
-        // 👇 NUEVO: Obtener historial de movimientos
         public async Task<List<MovimientoInventario>> ObtenerHistorialAsync()
         {
             try

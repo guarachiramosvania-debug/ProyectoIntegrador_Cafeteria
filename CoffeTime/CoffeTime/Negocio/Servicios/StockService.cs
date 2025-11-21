@@ -1,4 +1,3 @@
-// /Negocio/Servicios/StockService.cs
 using CoffeTime.Negocio.Modelos;
 using CoffeTime.Datos.Repositorios;
 using System.Collections.Generic;
@@ -8,57 +7,66 @@ namespace CoffeTime.Negocio.Servicios
 {
     public class StockService
     {
-        private readonly InsumoRepository _insumoRepository;
+        private readonly InsumoRepository _insumoRepo;
+        private readonly MovimientoInventarioRepository _movRepo;
+        private readonly ProductoInsumoRepository _prodInsumoRepo;
 
-        public StockService(InsumoRepository insumoRepository)
+        public StockService(InsumoRepository insumoRepo,
+                            MovimientoInventarioRepository movRepo,
+                            ProductoInsumoRepository prodInsumoRepo)
         {
-            _insumoRepository = insumoRepository;
+            _insumoRepo = insumoRepo;
+            _movRepo = movRepo;
+            _prodInsumoRepo = prodInsumoRepo;
         }
 
-        /// <summary>
-        /// Valida si hay stock suficiente para cada producto (tratado como insumo) en los detalles.
-        /// </summary>
-        public async Task<bool> HayStockSuficienteAsync(List<DetallePedido> detallesPedido)
+        // ===========================================================================
+        // ?? Validar stock suficiente
+        // ===========================================================================
+        public async Task<bool> HayStockParaProductoAsync(long idProducto)
         {
-            foreach (var detalle in detallesPedido)
+            var insumos = await _prodInsumoRepo.ObtenerPorProductoAsync(idProducto);
+
+            foreach (var pi in insumos)
             {
-                // Asumimos: detalle.IdProducto == IdInsumo
-                var insumo = await _insumoRepository.ObtenerPorId(detalle.IdProducto);
-                if (insumo == null || insumo.StockActual < detalle.Cantidad)
-                    return false;
+                var insumo = await _insumoRepo.ObtenerPorId(pi.IdInsumo);
+
+                if (insumo == null) return false;
+                if (insumo.StockActual < pi.Cantidad) return false;
             }
+
             return true;
         }
 
-        /// <summary>
-        /// Descuenta el stock de cada insumo (producto) tras confirmar el pedido.
-        /// </summary>
-        public async Task<bool> DescontarStockPorPedidoAsync(List<DetallePedido> detallesPedido)
+        // ===========================================================================
+        // ?? Descontar insumos tras una venta
+        // ===========================================================================
+        public async Task<bool> DescontarStockProductoAsync(long idProducto, long idUsuario)
         {
-            foreach (var detalle in detallesPedido)
+            var insumos = await _prodInsumoRepo.ObtenerPorProductoAsync(idProducto);
+
+            foreach (var pi in insumos)
             {
-                var insumo = await _insumoRepository.ObtenerPorId(detalle.IdProducto);
-                if (insumo == null || insumo.StockActual < detalle.Cantidad)
-                    return false;
+                var insumo = await _insumoRepo.ObtenerPorId(pi.IdInsumo);
+                if (insumo == null) return false;
 
-                var nuevoStock = insumo.StockActual - detalle.Cantidad;
-                var actualizado = await _insumoRepository.ActualizarStock(detalle.IdProducto, nuevoStock);
-                if (!actualizado)
-                    return false;
+                var nuevoStock = insumo.StockActual - pi.Cantidad;
+
+                await _insumoRepo.ActualizarStock(insumo.IdInsumo, nuevoStock);
+
+                // registrar movimiento
+                await _movRepo.RegistrarMovimientoAsync(new MovimientoInventario
+                {
+                    IdInsumo = pi.IdInsumo,
+                    TipoMovimiento = "salida",
+                    Cantidad = pi.Cantidad,
+                    Fecha = DateTime.Now,
+                    UsuarioResponsable = idUsuario,
+                    CostoTotal = 0
+                });
             }
+
             return true;
-        }
-
-        /// <summary>
-        /// Incrementa el stock de un insumo (entrada de proveedor).
-        /// </summary>
-        public async Task<bool> AgregarStockAsync(long insumoId, decimal cantidadAdicional)
-        {
-            var insumo = await _insumoRepository.ObtenerPorId(insumoId);
-            if (insumo == null) return false;
-
-            var nuevoStock = insumo.StockActual + cantidadAdicional;
-            return await _insumoRepository.ActualizarStock(insumoId, nuevoStock);
         }
     }
 }
