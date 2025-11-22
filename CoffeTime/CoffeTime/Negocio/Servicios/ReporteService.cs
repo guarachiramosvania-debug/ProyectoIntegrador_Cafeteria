@@ -15,14 +15,15 @@ namespace CoffeTime.Negocio.Servicios
 
         public ReporteService()
         {
-            _pedidoRepo = new PedidoRepository(SupabaseContext.Client);
-            _productoRepo = new ProductoRepository(SupabaseContext.Client);
+            _pedidoRepo = new PedidoRepository();   // ? corregido
+            _productoRepo = new ProductoRepository(); // ? corregido
         }
 
         // --------------------------------------------------------------------
         // RESUMEN GENERAL
         // --------------------------------------------------------------------
-        public async Task<(decimal TotalVentas, int TotalPedidos, decimal TicketPromedio)> ObtenerResumenGeneralAsync()
+        public async Task<(decimal TotalVentas, int TotalPedidos, decimal TicketPromedio)>
+            ObtenerResumenGeneralAsync()
         {
             var pedidos = await _pedidoRepo.GetAll();
 
@@ -67,7 +68,7 @@ namespace CoffeTime.Negocio.Servicios
         {
             var productos = await _productoRepo.GetAll();
 
-            // Temporal: sin registros reales de ventas usamos precio como referencia
+            // Temporal hasta que uses detalle_pedido
             return productos
                 .OrderByDescending(p => p.Precio)
                 .Take(5)

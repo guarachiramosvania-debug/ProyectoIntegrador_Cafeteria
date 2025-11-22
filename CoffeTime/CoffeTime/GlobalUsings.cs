@@ -1,0 +1,9 @@
+﻿global using CoffeTime.Presentacion.Components;
+global using CoffeTime.Presentacion.Converters;
+global using CoffeTime.Datos.Repositorios;
+global using CoffeTime.Negocio.Modelos;
+global using CoffeTime.Negocio.Servicios;
+global using System;
+global using System.Collections.Generic;
+global using System.Threading.Tasks;
+global using System.Windows;

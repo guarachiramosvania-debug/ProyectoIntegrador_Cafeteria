@@ -7,7 +7,7 @@ namespace CoffeTime.Negocio.Modelos
     public class Producto : BaseModel
     {
         [PrimaryKey("id_producto")]
-        public long IdProducto { get; set; }
+        public int Id { get; set; }
 
         [Column("nombre")]
         public string Nombre { get; set; }
