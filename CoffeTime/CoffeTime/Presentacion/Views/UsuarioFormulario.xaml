@@ -1,0 +1,59 @@
+﻿<Window x:Class="CoffeTime.Presentacion.Views.UsuarioFormulario"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Usuario"
+        Height="500" Width="400"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#FFF8F4E9">
+
+    <Border Margin="20" Padding="20" Background="White" CornerRadius="10">
+        <StackPanel>
+
+            <TextBlock Text="Formulario de Usuario"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       Foreground="#8B5E34"
+                       Margin="0 0 0 20"/>
+
+            <!-- NOMBRE USUARIO -->
+            <TextBlock Text="Nombre de Usuario"/>
+            <TextBox x:Name="txtUsuario" Height="32" Margin="0 0 0 10"/>
+
+            <!-- NOMBRE -->
+            <TextBlock Text="Nombre"/>
+            <TextBox x:Name="txtNombre" Height="32" Margin="0 0 0 10"/>
+
+            <!-- APELLIDO -->
+            <TextBlock Text="Apellido"/>
+            <TextBox x:Name="txtApellido" Height="32" Margin="0 0 0 10"/>
+
+            <!-- CONTRASEÑA -->
+            <TextBlock Text="Contraseña"/>
+            <PasswordBox x:Name="txtContrasena" Height="32" Margin="0 0 0 10"/>
+
+            <!-- ROL -->
+            <TextBlock Text="Rol"/>
+            <ComboBox x:Name="cmbRol" Height="30">
+                <ComboBoxItem Content="Administrador" Tag="admin"/>
+                <ComboBoxItem Content="Operario" Tag="operario"/>
+            </ComboBox>
+
+            <!-- BOTONES -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 15 0 0">
+                <Button Content="Cancelar"
+                        Width="90"
+                        Margin="0 0 10 0"
+                        Click="Cancelar_Click"/>
+
+                <Button Content="Guardar"
+                        Width="110"
+                        Background="#E0912D"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        Click="Guardar_Click"/>
+            </StackPanel>
+
+        </StackPanel>
+    </Border>
+</Window>

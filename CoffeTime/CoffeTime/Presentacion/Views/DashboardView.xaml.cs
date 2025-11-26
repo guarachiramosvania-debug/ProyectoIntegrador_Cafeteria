@@ -19,6 +19,33 @@ namespace CoffeTime.Presentacion.Views
             // 🔥 Cargar datos al abrir
             var vm = (DashboardViewModel)DataContext;
             vm.LoadDashboardDataCommand.Execute(null);
+
+        }
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            CerrarSesionAutomatica();
+        }
+        public async void CerrarSesionAutomatica()
+        {
+            try
+            {
+                if (App.Current.Properties["IdUsuario"] == null)
+                    return;
+
+                long id = (long)App.Current.Properties["IdUsuario"];
+
+                var repo = new UsuarioRepository();
+                var user = await repo.ObtenerPorIdAsync(id);
+
+                if (user != null)
+                {
+                    user.Online = false;
+                    user.UltimoLogin = DateTime.Now; // opcional
+                    await repo.ActualizarUsuarioAsync(user);
+                }
+            }
+            catch { /* ignorar errores */ }
         }
     }
 
@@ -33,10 +60,14 @@ namespace CoffeTime.Presentacion.Views
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
     }
 
     public class DashboardViewModel : ViewModelBase
     {
+        
+
         // ======================================
         // PROPIEDADES
         // ======================================

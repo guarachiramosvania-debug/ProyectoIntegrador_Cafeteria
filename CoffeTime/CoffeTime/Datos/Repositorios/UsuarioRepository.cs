@@ -1,12 +1,10 @@
-using CoffeTime.Datos.Conexion;
-using CoffeTime.Negocio.Modelos;
 using Supabase;
+using CoffeTime.Datos.Conexion;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-
-
-// ?? USAMOS SOLO ESTE MODELO PARA EVITAR DUPLICADOS
 using UsuarioModel = CoffeTime.Negocio.Modelos.Usuario;
 
 namespace CoffeTime.Datos.Repositorios
@@ -25,7 +23,7 @@ namespace CoffeTime.Datos.Repositorios
             _client = client;
         }
 
-        // LOGIN REAL
+        // ===================== LOGIN ==========================
         public async Task<UsuarioModel?> ObtenerPorCredencialesAsync(string usuario, string contrasena)
         {
             try
@@ -34,53 +32,93 @@ namespace CoffeTime.Datos.Repositorios
                     .From<UsuarioModel>()
                     .Filter("usuario", Supabase.Postgrest.Constants.Operator.Equals, usuario)
                     .Filter("contrasena", Supabase.Postgrest.Constants.Operator.Equals, contrasena)
-.Filter("estado", Supabase.Postgrest.Constants.Operator.Equals, "true")
+                    .Filter("estado", Supabase.Postgrest.Constants.Operator.Equals, "true")
                     .Get();
 
                 return result.Models.FirstOrDefault();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"ERROR LOGIN: {ex.Message}");
+                MessageBox.Show("ERROR LOGIN: " + ex.Message);
                 return null;
             }
         }
 
-
-
-        // Obtener usuario por nombre
-        public async Task<UsuarioModel?> ObtenerPorNombreUsuarioAsync(string nombreUsuario)
-        {
-            try
-            {
-                var response = await _client
-                    .From<UsuarioModel>()
-                    .Filter("usuario", Supabase.Postgrest.Constants.Operator.Equals, nombreUsuario)
-                    .Single();
-
-                return response;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        // Crear usuario
+        // ===================== CREAR USUARIO ====================
         public async Task<bool> CrearUsuarioAsync(UsuarioModel usuario)
         {
             try
             {
+                usuario.Online = false; // por defecto
                 await _client.From<UsuarioModel>().Insert(usuario);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                MessageBox.Show("ERROR INSERT: " + ex.Message);
                 return false;
             }
         }
 
-        // Obtener todos
+        // ========== ACTUALIZAR PERFIL (NO TOCAR ONLINE) =========
+        public async Task<bool> ActualizarPerfilAsync(UsuarioModel usuario)
+        {
+            try
+            {
+                var dic = new Dictionary<string, object>
+                {
+                    ["nombre"] = usuario.Nombre,
+                    ["apellido"] = usuario.Apellido,
+                    ["usuario"] = usuario.NombreUsuario,
+                    ["rol"] = usuario.Rol.ToLower(),
+                    ["estado"] = usuario.Estado,
+                    ["ultimo_login"] = usuario.UltimoLogin
+                };
+
+                var response = await _client
+                    .From<UsuarioModel>()
+                    .Where(u => u.IdUsuario == usuario.IdUsuario)
+                    .Update(dic);  // ?? ESTE ES EL MÉTODO CORRECTO
+
+                return response.Models.Count > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ERROR UPDATE PERFIL: " + ex.Message);
+                return false;
+            }
+        }
+
+
+
+        // ========= ACTUALIZAR SOLO EL CAMPO ONLINE ==========
+        public async Task<bool> ActualizarOnlineAsync(long idUsuario, bool online)
+        {
+            try
+            {
+                var dic = new Dictionary<string, object>
+                {
+                    ["online"] = online
+                };
+
+                var response = await _client
+                    .From<UsuarioModel>()
+                    .Where(u => u.IdUsuario == idUsuario)
+                    .Update(dic);   // ?? MISMO MÉTODO
+
+                return response.Models.Count > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ERROR UPDATE ONLINE: " + ex.Message);
+                return false;
+            }
+        }
+
+
+
+
+        // ===================== OBTENER TODOS =====================
         public async Task<List<UsuarioModel>> ObtenerTodosAsync()
         {
             try
@@ -91,6 +129,25 @@ namespace CoffeTime.Datos.Repositorios
             catch
             {
                 return new List<UsuarioModel>();
+            }
+        }
+
+        // ===================== ELIMINAR ==========================
+        public async Task<bool> EliminarUsuarioAsync(long id)
+        {
+            try
+            {
+                await _client
+                    .From<UsuarioModel>()
+                    .Where(u => u.IdUsuario == id)
+                    .Delete();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ERROR DELETE: " + ex.Message);
+                return false;
             }
         }
     }

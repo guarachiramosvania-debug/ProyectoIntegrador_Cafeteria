@@ -42,13 +42,25 @@ namespace CoffeTime.Presentacion.Components
         }
 
         // 🔥 CERRAR SESIÓN
-        private void LogoutClick(object sender, RoutedEventArgs e)
+        private async void LogoutClick(object sender, RoutedEventArgs e)
         {
+            long? id = App.Current.Properties["IdUsuario"] as long?;
+            if (id.HasValue)
+            {
+                var repo = new UsuarioRepository();
+                var service = new UsuarioService(repo);
+                await service.ActualizarOnlineAsync(id.Value, false);
+            }
+
             App.Current.Properties["NombreUsuario"] = null;
             App.Current.Properties["RolUsuario"] = null;
+            App.Current.Properties["IdUsuario"] = null;
 
             new LoginView().Show();
             Window.GetWindow(this)?.Close();
         }
+
+
+
     }
 }

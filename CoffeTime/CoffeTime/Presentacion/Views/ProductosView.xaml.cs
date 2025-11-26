@@ -6,12 +6,23 @@ namespace CoffeTime.Presentacion.Views
     public partial class ProductosView : Window
     {
         private readonly ProductoRepository repo = new ProductoRepository();
+        private readonly UsuarioRepository usuarioRepo = new UsuarioRepository();
 
         public ProductosView()
         {
             InitializeComponent();
+            MantenerUsuarioOnline();
             CargarProductos();
+
         }
+        private async void MantenerUsuarioOnline()
+        {
+            if (App.Current.Properties["IdUsuario"] is long id)
+            {
+                await usuarioRepo.ActualizarOnlineAsync(id, true);
+            }
+        }
+        
 
         private async void CargarProductos()
         {

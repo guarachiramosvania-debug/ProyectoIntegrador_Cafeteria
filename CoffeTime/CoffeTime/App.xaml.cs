@@ -21,5 +21,28 @@ namespace CoffeTime
             SupabaseClient = new Client(supabaseUrl, supabaseKey);
             await SupabaseClient.InitializeAsync();
         }
+        protected override async void OnExit(ExitEventArgs e)
+        {
+            try
+            {
+                string nombreUsuario = App.Current.Properties["NombreUsuario"]?.ToString();
+
+                if (!string.IsNullOrWhiteSpace(nombreUsuario))
+                {
+                    var repo = new UsuarioRepository();
+                    var usuario = await repo.ObtenerPorNombreUsuarioAsync(nombreUsuario);
+
+                    if (usuario != null)
+                    {
+                        usuario.Online = false;
+                        await repo.ActualizarUsuarioAsync(usuario);
+                    }
+                }
+            }
+            catch { }
+
+            base.OnExit(e);
+        }
+
     }
 }

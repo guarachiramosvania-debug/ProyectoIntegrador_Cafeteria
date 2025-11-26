@@ -1,5 +1,6 @@
 ﻿using CoffeTime.Negocio.Servicios;
 using CoffeTime.Datos.Repositorios;
+using System;
 using System.Windows;
 
 namespace CoffeTime.Presentacion.Views
@@ -29,8 +30,15 @@ namespace CoffeTime.Presentacion.Views
 
             if (usuario != null)
             {
+                // Guardar info en App
+                App.Current.Properties["IdUsuario"] = usuario.IdUsuario;
                 App.Current.Properties["NombreUsuario"] = usuario.NombreUsuario;
                 App.Current.Properties["RolUsuario"] = usuario.Rol;
+
+                // Actualizar último login y marcar online
+                usuario.UltimoLogin = DateTime.Now;
+                await service.ActualizarPerfilAsync(usuario);
+                await service.ActualizarOnlineAsync(usuario.IdUsuario, true);
 
                 DashboardView dashboard = new DashboardView();
                 Application.Current.MainWindow = dashboard;
@@ -41,7 +49,6 @@ namespace CoffeTime.Presentacion.Views
             {
                 MessageBox.Show("Usuario o contraseña incorrectos.");
             }
-
         }
     }
 }
