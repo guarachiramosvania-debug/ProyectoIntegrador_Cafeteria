@@ -16,18 +16,15 @@
             long id = (long)App.Current.Properties["IdUsuario"];
 
             var repo = new UsuarioRepository();
-            var user = await repo.ObtenerPorIdAsync(id);
 
-            if (user != null)
-            {
-                user.Online = false;
-                user.UltimoLogin = DateTime.Now;
-                await repo.ActualizarUsuarioAsync(user);
-            }
+            await repo.ActualizarOnlineAsync(id, false);
         }
         catch
         {
-            // ignoramos errores aquí para no romper el cierre de la app
+            // ignorar errores
         }
     }
+
+       
+    
 }

@@ -99,6 +99,36 @@ namespace CoffeTime.Datos.Repositorios
 
         // ===================== ACTUALIZAR COMPLETO ====================
         // (se usa para editar, login, logout…)
+        public async Task<bool> ActualizarOnlineAsync(long idUsuario, bool online)
+        {
+            try
+            {
+                // 1?? obtener el usuario completo
+                var user = await ObtenerPorIdAsync(idUsuario);
+                if (user == null)
+                    return false;
+
+                // 2?? modificar solo online
+                user.Online = online;
+
+                // 3?? actualizar enviando TODO el modelo
+                var response = await _client
+                    .From<UsuarioModel>()
+                    .Where(u => u.IdUsuario == idUsuario)
+                    .Update(user);
+
+                return response.Models.Count > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ERROR UPDATE ONLINE: " + ex.Message);
+                return false;
+            }
+        }
+
+
+
+
         public async Task<bool> ActualizarUsuarioAsync(UsuarioModel usuario)
         {
             try
@@ -106,16 +136,17 @@ namespace CoffeTime.Datos.Repositorios
                 var response = await _client
                     .From<UsuarioModel>()
                     .Where(u => u.IdUsuario == usuario.IdUsuario)
-                    .Update(usuario);   // ?? aquí va el modelo, no un Dictionary
+                    .Update(usuario);   // usa modelo, NO diccionario
 
                 return response.Models.Count > 0;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("ERROR UPDATE: " + ex.Message);
+                MessageBox.Show("ERROR UPDATE PERFIL: " + ex.Message);
                 return false;
             }
         }
+
 
         // ===================== OBTENER TODOS =====================
         public async Task<List<UsuarioModel>> ObtenerTodosAsync()

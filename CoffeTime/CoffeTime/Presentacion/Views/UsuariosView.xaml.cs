@@ -76,13 +76,18 @@ namespace CoffeTime.Presentacion.Views
         // ============================
         private void BtnEditar_Click(object sender, RoutedEventArgs e)
         {
-            long id = long.Parse((sender as FrameworkElement).Tag.ToString());
-
-            UsuarioFormulario form = new UsuarioFormulario(id);
-            form.ShowDialog();
-
-            UsuariosView_Loaded(null, null); // refrescar
+            if (sender is FrameworkElement fe && fe.Tag is long id)
+            {
+                UsuarioFormulario form = new UsuarioFormulario(id);
+                form.ShowDialog();
+                UsuariosView_Loaded(null, null); // refrescar
+            }
+            else
+            {
+                MessageBox.Show("Error: no se encontró el ID del usuario.");
+            }
         }
+
 
 
 

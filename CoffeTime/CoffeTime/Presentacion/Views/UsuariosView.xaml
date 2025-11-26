@@ -91,17 +91,20 @@
                         Binding="{Binding Estado}"
                         Width="1*"/>
 
-                        <!-- 🟣 NUEVA COLUMNA ÚLTIMO LOGIN (opcional) -->
-                        <!--<DataGridTextColumn Header="Último Login"
+                        <DataGridTextColumn Header="Último Login"
                         Binding="{Binding UltimoLogin}"
-                        Width="1.5*"/>-->
+                        Width="1.5*"/>
 
                         <DataGridTemplateColumn Header="Acciones" Width="120">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Content="✏️" Width="30" Height="30" Margin="3" Click="BtnEditar_Click"/>
-                                        <Button Content="🗑️" Width="30" Height="30" Margin="3" Click="BtnEliminar_Click"/>
+                                        <Button Content="✏️"
+        Tag="{Binding IdUsuario}"
+        Click="BtnEditar_Click"/>
+                                        <Button Content="🗑️"
+        Tag="{Binding IdUsuario}"
+        Click="BtnEliminar_Click"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

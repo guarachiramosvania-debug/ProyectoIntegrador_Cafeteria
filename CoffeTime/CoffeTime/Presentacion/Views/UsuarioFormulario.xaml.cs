@@ -47,6 +47,13 @@ namespace CoffeTime.Presentacion.Views
             string nombre = txtNombre.Text.Trim();
             string apellido = txtApellido.Text.Trim();
             string contrasena = txtContrasena.Password.Trim();
+            string contrasena2 = txtConfirmarContrasena.Password.Trim();
+
+            if (contrasena != contrasena2)
+            {
+                MessageBox.Show("Las contraseñas no coinciden.");
+                return;
+            }
 
             if (cmbRol.SelectedItem == null)
             {
@@ -71,6 +78,7 @@ namespace CoffeTime.Presentacion.Views
                     Nombre = nombre,
                     Apellido = apellido,
                     Contrasena = contrasena,
+
                     Rol = rol,
                     Estado = true
                 };
@@ -85,6 +93,8 @@ namespace CoffeTime.Presentacion.Views
             else
             {
                 // Editar
+                var original = await _repo.ObtenerPorIdAsync(_id.Value);
+
                 var usuarioEditado = new Usuario
                 {
                     IdUsuario = _id.Value,
@@ -93,8 +103,13 @@ namespace CoffeTime.Presentacion.Views
                     Apellido = apellido,
                     Contrasena = contrasena,
                     Rol = rol,
-                    Estado = true
+                    Estado = true,
+
+                    // Mantener valores actuales
+                    Online = original?.Online,
+                    UltimoLogin = original?.UltimoLogin
                 };
+
 
                 bool ok = await _repo.ActualizarUsuarioAsync(usuarioEditado);
 
@@ -103,6 +118,7 @@ namespace CoffeTime.Presentacion.Views
                 else
                     MessageBox.Show("Usuario actualizado correctamente.");
             }
+
 
             DialogResult = true;
             Close();

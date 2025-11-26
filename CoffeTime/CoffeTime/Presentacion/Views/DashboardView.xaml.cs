@@ -1,9 +1,10 @@
-﻿using System;
+﻿using CoffeTime.Negocio.Modelos;
+using CoffeTime.Presentacion.Commands;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
-using CoffeTime.Presentacion.Commands;
 
 namespace CoffeTime.Presentacion.Views
 {
@@ -42,7 +43,7 @@ namespace CoffeTime.Presentacion.Views
                 {
                     user.Online = false;
                     user.UltimoLogin = DateTime.Now; // opcional
-                    await repo.ActualizarUsuarioAsync(user);
+                    await repo.ActualizarOnlineAsync(user.IdUsuario, true);
                 }
             }
             catch { /* ignorar errores */ }

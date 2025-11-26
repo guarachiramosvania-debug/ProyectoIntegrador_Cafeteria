@@ -36,9 +36,14 @@ namespace CoffeTime.Presentacion.Views
                 App.Current.Properties["IdUsuario"] = usuario.IdUsuario;
 
                 // Marcar ONLINE + ultimo login
-                usuario.Online = true;
-                usuario.UltimoLogin = DateTime.Now;
-                await repo.ActualizarUsuarioAsync(usuario);
+                // Guardar quien está logueado
+                App.Current.Properties["IdUsuario"] = usuario.IdUsuario;
+                App.Current.Properties["NombreUsuario"] = usuario.NombreUsuario;
+                App.Current.Properties["RolUsuario"] = usuario.Rol;
+
+                // Marcar ONLINE de verdad
+                await repo.ActualizarOnlineAsync(usuario.IdUsuario, true);
+
 
                 var dashboard = new DashboardView();
                 Application.Current.MainWindow = dashboard;

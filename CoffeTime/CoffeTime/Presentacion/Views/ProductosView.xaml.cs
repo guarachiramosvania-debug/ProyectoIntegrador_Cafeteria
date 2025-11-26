@@ -24,7 +24,7 @@ namespace CoffeTime.Presentacion.Views
                 if (usuario != null)
                 {
                     usuario.Online = true;
-                    await usuarioRepo.ActualizarUsuarioAsync(usuario);
+                    await usuarioRepo.ActualizarOnlineAsync(usuario.IdUsuario, true);
                 }
             }
         }
