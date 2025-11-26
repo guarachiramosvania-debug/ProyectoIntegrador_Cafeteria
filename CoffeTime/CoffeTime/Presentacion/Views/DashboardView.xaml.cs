@@ -8,11 +8,13 @@ using System.Windows.Input;
 
 namespace CoffeTime.Presentacion.Views
 {
+
     public partial class DashboardView : Window
     {
         public DashboardView()
         {
             InitializeComponent();
+            this.Closing += Dashboard_Closing;
 
             // 🔥 Asignar el ViewModel interno como DataContext
             DataContext = new DashboardViewModel();
@@ -22,6 +24,17 @@ namespace CoffeTime.Presentacion.Views
             vm.LoadDashboardDataCommand.Execute(null);
 
         }
+        private async void Dashboard_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            await ((App)Application.Current).CerrarSesionAutomatica();
+        }
+        protected override async void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            await ((App)Application.Current).CerrarSesionAutomatica();
+            base.OnClosing(e);
+        }
+
+
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);

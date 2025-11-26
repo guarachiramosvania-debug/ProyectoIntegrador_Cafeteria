@@ -11,6 +11,12 @@ namespace CoffeTime.Presentacion.Views
     {
         private readonly UsuarioService _service;
         private long? _idSeleccionado = null;
+        protected override async void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            await ((App)Application.Current).CerrarSesionAutomatica();
+            base.OnClosing(e);
+        }
+
 
         public UsuariosView()
         {

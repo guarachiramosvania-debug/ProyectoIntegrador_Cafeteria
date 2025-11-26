@@ -1,41 +1,51 @@
-﻿public partial class App : Application
+﻿using CoffeTime.Datos.Repositorios;
+using System;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace CoffeTime
 {
-    protected override void OnStartup(StartupEventArgs e)
+    public partial class App : Application
     {
-        base.OnStartup(e);
-
-        Application.Current.MainWindow.Closing += MainWindow_Closing;
-    }
-    private async void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
-    {
-        await CerrarSesionAutomatica();
-    }
-
-    protected override async void OnExit(ExitEventArgs e)
-    {
-        await CerrarSesionAutomatica();
-        base.OnExit(e);
-    }
-
-    private async Task CerrarSesionAutomatica()
-    {
-        try
+        protected override void OnStartup(StartupEventArgs e)
         {
-            if (App.Current.Properties["IdUsuario"] == null)
-                return;
-
-            long id = (long)App.Current.Properties["IdUsuario"];
-
-            var repo = new UsuarioRepository();
-
-            await repo.ActualizarOnlineAsync(id, false);
+            base.OnStartup(e);
+            // ❌ Ya no se usa MainWindow.Closing aquí porque MainWindow aún no existe.
         }
-        catch
+
+        protected override async void OnExit(ExitEventArgs e)
         {
-            // ignorar errores
+            await CerrarSesionAutomatica();
+            base.OnExit(e);
+        }
+
+        /// <summary>
+        /// Cerrar sesión automáticamente.
+        /// Ejecutado desde: Logout, cierre normal, cierre de Dashboard.
+        /// </summary>
+        public async Task CerrarSesionAutomatica()
+        {
+            try
+            {
+                if (App.Current.Properties["IdUsuario"] == null)
+                    return;
+
+                long id = (long)App.Current.Properties["IdUsuario"];
+
+                var repo = new UsuarioRepository();
+                var user = await repo.ObtenerPorIdAsync(id);
+
+                if (user != null)
+                {
+                    user.Online = false;
+                    user.UltimoLogin = DateTime.Now;
+                    await repo.ActualizarUsuarioAsync(user);
+                }
+            }
+            catch
+            {
+                // Se ignora cualquier error para no interrumpir el cierre de la aplicación
+            }
         }
     }
-
-       
-    
 }
