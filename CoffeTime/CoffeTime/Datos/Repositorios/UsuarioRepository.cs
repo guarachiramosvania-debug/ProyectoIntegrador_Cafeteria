@@ -44,6 +44,43 @@ namespace CoffeTime.Datos.Repositorios
             }
         }
 
+        // ========== OBTENER POR NOMBRE_USUARIO (para validaciones / logout antiguo) ==========
+        public async Task<UsuarioModel?> ObtenerPorNombreUsuarioAsync(string nombreUsuario)
+        {
+            try
+            {
+                var response = await _client
+                    .From<UsuarioModel>()
+                    .Filter("usuario", Supabase.Postgrest.Constants.Operator.Equals, nombreUsuario)
+                    .Single();
+
+                return response;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+
+        // ========== OBTENER POR ID (para dashboard, cierre por Id) ==========
+        public async Task<UsuarioModel?> ObtenerPorIdAsync(long idUsuario)
+        {
+            try
+            {
+                var result = await _client
+                    .From<UsuarioModel>()
+                    .Filter("id_usuario", Supabase.Postgrest.Constants.Operator.Equals, idUsuario)
+                    .Single();
+
+                return result;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         // ===================== CREAR USUARIO ====================
         public async Task<bool> CrearUsuarioAsync(UsuarioModel usuario)
         {
@@ -60,63 +97,25 @@ namespace CoffeTime.Datos.Repositorios
             }
         }
 
-        // ========== ACTUALIZAR PERFIL (NO TOCAR ONLINE) =========
-        public async Task<bool> ActualizarPerfilAsync(UsuarioModel usuario)
+        // ===================== ACTUALIZAR COMPLETO ====================
+        // (se usa para editar, login, logout…)
+        public async Task<bool> ActualizarUsuarioAsync(UsuarioModel usuario)
         {
             try
             {
-                var dic = new Dictionary<string, object>
-                {
-                    ["nombre"] = usuario.Nombre,
-                    ["apellido"] = usuario.Apellido,
-                    ["usuario"] = usuario.NombreUsuario,
-                    ["rol"] = usuario.Rol.ToLower(),
-                    ["estado"] = usuario.Estado,
-                    ["ultimo_login"] = usuario.UltimoLogin
-                };
-
                 var response = await _client
                     .From<UsuarioModel>()
                     .Where(u => u.IdUsuario == usuario.IdUsuario)
-                    .Update(dic);  // ?? ESTE ES EL MÉTODO CORRECTO
+                    .Update(usuario);   // ?? aquí va el modelo, no un Dictionary
 
                 return response.Models.Count > 0;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("ERROR UPDATE PERFIL: " + ex.Message);
+                MessageBox.Show("ERROR UPDATE: " + ex.Message);
                 return false;
             }
         }
-
-
-
-        // ========= ACTUALIZAR SOLO EL CAMPO ONLINE ==========
-        public async Task<bool> ActualizarOnlineAsync(long idUsuario, bool online)
-        {
-            try
-            {
-                var dic = new Dictionary<string, object>
-                {
-                    ["online"] = online
-                };
-
-                var response = await _client
-                    .From<UsuarioModel>()
-                    .Where(u => u.IdUsuario == idUsuario)
-                    .Update(dic);   // ?? MISMO MÉTODO
-
-                return response.Models.Count > 0;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("ERROR UPDATE ONLINE: " + ex.Message);
-                return false;
-            }
-        }
-
-
-
 
         // ===================== OBTENER TODOS =====================
         public async Task<List<UsuarioModel>> ObtenerTodosAsync()
@@ -150,5 +149,6 @@ namespace CoffeTime.Datos.Repositorios
                 return false;
             }
         }
+
     }
 }

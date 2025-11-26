@@ -2,35 +2,36 @@ using CoffeTime.Datos.Repositorios;
 using CoffeTime.Negocio.Modelos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UsuarioModel = CoffeTime.Negocio.Modelos.Usuario;
 
 namespace CoffeTime.Negocio.Servicios
 {
     public class UsuarioService
     {
-        private readonly UsuarioRepository _usuarioRepository;
+        private readonly UsuarioRepository _repo;
 
-        public UsuarioService(UsuarioRepository usuarioRepository)
+        public UsuarioService(UsuarioRepository repo)
         {
-            _usuarioRepository = usuarioRepository;
+            _repo = repo;
         }
 
-        public Task<List<UsuarioModel>> ObtenerTodosAsync()
-            => _usuarioRepository.ObtenerTodosAsync();
+        public Task<List<Usuario>> ObtenerTodosAsync()
+        {
+            return _repo.ObtenerTodosAsync();
+        }
 
-        public Task<UsuarioModel?> AutenticarAsync(string nombreUsuario, string contrasena)
-            => _usuarioRepository.ObtenerPorCredencialesAsync(nombreUsuario, contrasena);
+        public async Task<bool> CrearUsuarioAsync(Usuario usuario)
+        {
+            return await _repo.CrearUsuarioAsync(usuario);
+        }
 
-        public Task<bool> CrearUsuarioAsync(UsuarioModel usuario)
-            => _usuarioRepository.CrearUsuarioAsync(usuario);
+        public async Task<bool> EliminarUsuarioAsync(long idUsuario)
+        {
+            return await _repo.EliminarUsuarioAsync(idUsuario);
+        }
 
-        public Task<bool> ActualizarPerfilAsync(UsuarioModel usuario)
-            => _usuarioRepository.ActualizarPerfilAsync(usuario);
-
-        public Task<bool> ActualizarOnlineAsync(long idUsuario, bool online)
-            => _usuarioRepository.ActualizarOnlineAsync(idUsuario, online);
-
-        public Task<bool> EliminarUsuarioAsync(long idUsuario)
-            => _usuarioRepository.EliminarUsuarioAsync(idUsuario);
+        public async Task<Usuario?> AutenticarAsync(string usuario, string contrasena)
+        {
+            return await _repo.ObtenerPorCredencialesAsync(usuario, contrasena);
+        }
     }
 }

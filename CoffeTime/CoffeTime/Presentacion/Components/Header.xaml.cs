@@ -44,13 +44,22 @@ namespace CoffeTime.Presentacion.Components
         // 🔥 CERRAR SESIÓN
         private async void LogoutClick(object sender, RoutedEventArgs e)
         {
-            long? id = App.Current.Properties["IdUsuario"] as long?;
-            if (id.HasValue)
+            try
             {
-                var repo = new UsuarioRepository();
-                var service = new UsuarioService(repo);
-                await service.ActualizarOnlineAsync(id.Value, false);
+                if (App.Current.Properties["IdUsuario"] is long id)
+                {
+                    var repo = new UsuarioRepository();
+                    var user = await repo.ObtenerPorIdAsync(id);
+
+                    if (user != null)
+                    {
+                        user.Online = false;
+                        user.UltimoLogin = DateTime.Now;
+                        await repo.ActualizarUsuarioAsync(user);
+                    }
+                }
             }
+            catch { /* mejor loguear, pero lo dejamos vacío para que no reviente la app */ }
 
             App.Current.Properties["NombreUsuario"] = null;
             App.Current.Properties["RolUsuario"] = null;
@@ -59,6 +68,7 @@ namespace CoffeTime.Presentacion.Components
             new LoginView().Show();
             Window.GetWindow(this)?.Close();
         }
+
 
 
 

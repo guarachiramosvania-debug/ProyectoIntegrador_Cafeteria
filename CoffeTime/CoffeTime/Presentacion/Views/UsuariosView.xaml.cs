@@ -104,13 +104,16 @@ namespace CoffeTime.Presentacion.Views
                 "Confirmación",
                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                var result = await _service.EliminarUsuarioAsync(id);
+                bool ok = await _service.EliminarUsuarioAsync(id);
 
-                if (!result.exito)
-                    MessageBox.Show(result.mensaje);
+                if (!ok)
+                    MessageBox.Show("Error eliminando usuario.");
+                else
+                    MessageBox.Show("Usuario eliminado correctamente.");
 
                 UsuariosView_Loaded(null, null);
             }
         }
+
     }
 }

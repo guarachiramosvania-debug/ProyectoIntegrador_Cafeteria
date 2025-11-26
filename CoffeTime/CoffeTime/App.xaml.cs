@@ -1,48 +1,33 @@
-﻿using System.Windows;
-using Supabase;
-
-namespace CoffeTime
+﻿public partial class App : Application
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    protected override async void OnExit(ExitEventArgs e)
     {
-        public static Client SupabaseClient { get; private set; } = null!;
+        await CerrarSesionAutomatica();
+        base.OnExit(e);
+    }
 
-        protected override async void OnStartup(StartupEventArgs e)
+    private async Task CerrarSesionAutomatica()
+    {
+        try
         {
-            base.OnStartup(e);
+            if (App.Current.Properties["IdUsuario"] == null)
+                return;
 
-            // 🔑 CONFIGURA TUS CREDENCIALES DE SUPABASE AQUÍ
-            string supabaseUrl = "https://db.utushbtzxirwtccdycqm.supabase.co";
-            string supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; // ← TU ANON KEY
+            long id = (long)App.Current.Properties["IdUsuario"];
 
-            SupabaseClient = new Client(supabaseUrl, supabaseKey);
-            await SupabaseClient.InitializeAsync();
-        }
-        protected override async void OnExit(ExitEventArgs e)
-        {
-            try
+            var repo = new UsuarioRepository();
+            var user = await repo.ObtenerPorIdAsync(id);
+
+            if (user != null)
             {
-                string nombreUsuario = App.Current.Properties["NombreUsuario"]?.ToString();
-
-                if (!string.IsNullOrWhiteSpace(nombreUsuario))
-                {
-                    var repo = new UsuarioRepository();
-                    var usuario = await repo.ObtenerPorNombreUsuarioAsync(nombreUsuario);
-
-                    if (usuario != null)
-                    {
-                        usuario.Online = false;
-                        await repo.ActualizarUsuarioAsync(usuario);
-                    }
-                }
+                user.Online = false;
+                user.UltimoLogin = DateTime.Now;
+                await repo.ActualizarUsuarioAsync(user);
             }
-            catch { }
-
-            base.OnExit(e);
         }
-
+        catch
+        {
+            // ignoramos errores aquí para no romper el cierre de la app
+        }
     }
 }

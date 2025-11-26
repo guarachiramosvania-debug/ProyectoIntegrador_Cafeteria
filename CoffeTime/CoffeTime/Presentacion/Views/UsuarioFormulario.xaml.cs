@@ -47,6 +47,7 @@ namespace CoffeTime.Presentacion.Views
             string nombre = txtNombre.Text.Trim();
             string apellido = txtApellido.Text.Trim();
             string contrasena = txtContrasena.Password.Trim();
+
             if (cmbRol.SelectedItem == null)
             {
                 MessageBox.Show("Debe seleccionar un rol.");
@@ -71,15 +72,19 @@ namespace CoffeTime.Presentacion.Views
                     Apellido = apellido,
                     Contrasena = contrasena,
                     Rol = rol,
-                    Estado = true // siempre activo como dijiste
+                    Estado = true
                 };
 
-                var result = await _service.CrearUsuarioAsync(nuevo);
-                MessageBox.Show(result.mensaje);
+                bool ok = await _service.CrearUsuarioAsync(nuevo);
+
+                if (ok)
+                    MessageBox.Show("Usuario creado correctamente.");
+                else
+                    MessageBox.Show("Error al crear usuario.");
             }
             else
             {
-                // Editar existente
+                // Editar
                 var usuarioEditado = new Usuario
                 {
                     IdUsuario = _id.Value,
@@ -91,8 +96,12 @@ namespace CoffeTime.Presentacion.Views
                     Estado = true
                 };
 
-                var result = await _service.ActualizarUsuarioAsync(usuarioEditado);
-                MessageBox.Show(result.mensaje);
+                bool ok = await _repo.ActualizarUsuarioAsync(usuarioEditado);
+
+                if (!ok)
+                    MessageBox.Show("Error actualizando usuario.");
+                else
+                    MessageBox.Show("Usuario actualizado correctamente.");
             }
 
             DialogResult = true;
@@ -101,8 +110,9 @@ namespace CoffeTime.Presentacion.Views
 
         private void Cancelar_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
-            Close();
+
         }
     }
+
+    
 }

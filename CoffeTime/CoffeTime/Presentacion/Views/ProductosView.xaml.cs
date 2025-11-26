@@ -19,7 +19,13 @@ namespace CoffeTime.Presentacion.Views
         {
             if (App.Current.Properties["IdUsuario"] is long id)
             {
-                await usuarioRepo.ActualizarOnlineAsync(id, true);
+                var usuario = await usuarioRepo.ObtenerPorIdAsync(id);
+
+                if (usuario != null)
+                {
+                    usuario.Online = true;
+                    await usuarioRepo.ActualizarUsuarioAsync(usuario);
+                }
             }
         }
         
