@@ -1,5 +1,16 @@
 ﻿public partial class App : Application
 {
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        base.OnStartup(e);
+
+        Application.Current.MainWindow.Closing += MainWindow_Closing;
+    }
+    private async void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        await CerrarSesionAutomatica();
+    }
+
     protected override async void OnExit(ExitEventArgs e)
     {
         await CerrarSesionAutomatica();
