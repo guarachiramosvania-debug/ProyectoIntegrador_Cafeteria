@@ -10,6 +10,8 @@ namespace CoffeTime.Presentacion.Views
     public partial class UsuariosView : Window
     {
         private readonly UsuarioService _service;
+        private readonly UsuarioRepository usuarioRepo = new UsuarioRepository();
+
         private long? _idSeleccionado = null;
         protected override async void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
@@ -21,9 +23,23 @@ namespace CoffeTime.Presentacion.Views
         public UsuariosView()
         {
             InitializeComponent();
+            MantenerUsuarioOnline();
             _service = new UsuarioService(new UsuarioRepository());
 
             Loaded += UsuariosView_Loaded;
+        }
+        private async void MantenerUsuarioOnline()
+        {
+            if (App.Current.Properties["IdUsuario"] is long id)
+            {
+                var usuario = await usuarioRepo.ObtenerPorIdAsync(id);
+
+                if (usuario != null)
+                {
+                    usuario.Online = true;
+                    await usuarioRepo.ActualizarOnlineAsync(usuario.IdUsuario, true);
+                }
+            }
         }
 
         // ============================

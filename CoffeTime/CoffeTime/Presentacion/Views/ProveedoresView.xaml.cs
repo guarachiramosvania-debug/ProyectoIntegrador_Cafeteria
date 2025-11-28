@@ -1,5 +1,7 @@
 ﻿using CoffeTime.Datos.Repositorios;
 using CoffeTime.Negocio.Modelos;
+using CoffeTime.Datos.Repositorios;
+
 using System.Windows;
 
 namespace CoffeTime.Presentacion.Views
@@ -7,12 +9,29 @@ namespace CoffeTime.Presentacion.Views
     public partial class ProveedoresView : Window
     {
         private readonly ProveedorRepository repo = new ProveedorRepository();
+        private readonly UsuarioRepository usuarioRepo = new UsuarioRepository();
+
 
         public ProveedoresView()
         {
             InitializeComponent();
             CargarProveedores();
+            MantenerUsuarioOnline();
         }
+        private async void MantenerUsuarioOnline()
+        {
+            if (App.Current.Properties["IdUsuario"] is long id)
+            {
+                var usuario = await usuarioRepo.ObtenerPorIdAsync(id);
+
+                if (usuario != null)
+                {
+                    usuario.Online = true;
+                    await usuarioRepo.ActualizarOnlineAsync(usuario.IdUsuario, true);
+                }
+            }
+        }
+
 
         private async void CargarProveedores()
         {

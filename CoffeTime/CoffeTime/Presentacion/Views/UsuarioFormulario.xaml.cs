@@ -12,10 +12,12 @@ namespace CoffeTime.Presentacion.Views
         private readonly UsuarioRepository _repo;
         private readonly UsuarioService _service;
         private readonly long? _id;
+        private readonly UsuarioRepository usuarioRepo = new UsuarioRepository();
 
         public UsuarioFormulario(long? idUsuario)
         {
             InitializeComponent();
+            MantenerUsuarioOnline();
 
             _repo = new UsuarioRepository();
             _service = new UsuarioService(_repo);
@@ -23,6 +25,19 @@ namespace CoffeTime.Presentacion.Views
 
             if (_id != null)
                 CargarDatos();
+        }
+        private async void MantenerUsuarioOnline()
+        {
+            if (App.Current.Properties["IdUsuario"] is long id)
+            {
+                var usuario = await usuarioRepo.ObtenerPorIdAsync(id);
+
+                if (usuario != null)
+                {
+                    usuario.Online = true;
+                    await usuarioRepo.ActualizarOnlineAsync(usuario.IdUsuario, true);
+                }
+            }
         }
 
         private async void CargarDatos()

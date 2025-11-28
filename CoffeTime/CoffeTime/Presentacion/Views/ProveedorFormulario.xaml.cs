@@ -7,6 +7,8 @@ namespace CoffeTime.Presentacion.Views
     public partial class ProveedorFormulario : Window
     {
         private readonly ProveedorRepository repo = new ProveedorRepository();
+        private readonly UsuarioRepository usuarioRepo = new UsuarioRepository();
+
         private int? proveedorId = null;
         private Proveedor _proveedor;
         private readonly ProveedorRepository _repo;
@@ -14,6 +16,7 @@ namespace CoffeTime.Presentacion.Views
         public ProveedorFormulario(int? idProveedor)
         {
             InitializeComponent();
+            MantenerUsuarioOnline();
             _repo = new ProveedorRepository();
 
             if (idProveedor == null)
@@ -28,6 +31,19 @@ namespace CoffeTime.Presentacion.Views
             }
         }
 
+        private async void MantenerUsuarioOnline()
+        {
+            if (App.Current.Properties["IdUsuario"] is long id)
+            {
+                var usuario = await usuarioRepo.ObtenerPorIdAsync(id);
+
+                if (usuario != null)
+                {
+                    usuario.Online = true;
+                    await usuarioRepo.ActualizarOnlineAsync(usuario.IdUsuario, true);
+                }
+            }
+        }
 
         private async void CargarProveedor(int id)
         {

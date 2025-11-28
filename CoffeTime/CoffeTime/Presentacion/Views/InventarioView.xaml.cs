@@ -13,8 +13,22 @@ namespace CoffeTime.Presentacion.Views
         {
             InitializeComponent();
             Loaded += InventarioView_Loaded;
-        }
+            MantenerUsuarioOnline();
 
+
+        }
+        private async void MantenerUsuarioOnline()
+        {
+            if (App.Current.Properties["IdUsuario"] is long id)
+            {
+                var usuario = await new UsuarioRepository().ObtenerPorIdAsync(id);
+
+                if (usuario != null)
+                {
+                    await new UsuarioRepository().ActualizarOnlineSoloAsync(usuario.IdUsuario, true);
+                }
+            }
+        }
         private async void InventarioView_Loaded(object sender, RoutedEventArgs e)
         {
             try

@@ -27,34 +27,30 @@ namespace CoffeTime.Presentacion.Views
             var service = new UsuarioService(repo);
 
             var usuario = await service.AutenticarAsync(username, password);
-
             if (usuario != null)
             {
-                // Guardamos datos en App
+                // 🔥 ACTUALIZAR online + último login
+                usuario.Online = true;
+                usuario.UltimoLogin = DateTime.Now;
+
+                await repo.ActualizarUsuarioAsync(usuario);
+
                 App.Current.Properties["NombreUsuario"] = usuario.NombreUsuario;
-                App.Current.Properties["RolUsuario"] = usuario.Rol;
                 App.Current.Properties["IdUsuario"] = usuario.IdUsuario;
-
-                // Marcar ONLINE + ultimo login
-                // Guardar quien está logueado
-                App.Current.Properties["IdUsuario"] = usuario.IdUsuario;
-                App.Current.Properties["NombreUsuario"] = usuario.NombreUsuario;
                 App.Current.Properties["RolUsuario"] = usuario.Rol;
 
-                // Marcar ONLINE de verdad
-                await repo.ActualizarOnlineAsync(usuario.IdUsuario, true);
-
-
-                var dashboard = new DashboardView();
+                DashboardView dashboard = new DashboardView();
                 Application.Current.MainWindow = dashboard;
                 dashboard.Show();
                 this.Close();
             }
+
             else
             {
                 MessageBox.Show("Usuario o contraseña incorrectos.");
             }
         }
+
 
     }
 }

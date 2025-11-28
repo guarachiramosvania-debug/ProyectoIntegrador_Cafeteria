@@ -33,19 +33,11 @@ namespace CoffeTime
                 long id = (long)App.Current.Properties["IdUsuario"];
 
                 var repo = new UsuarioRepository();
-                var user = await repo.ObtenerPorIdAsync(id);
+                await repo.ActualizarOnlineSoloAsync(id, false);
 
-                if (user != null)
-                {
-                    user.Online = false;
-                    user.UltimoLogin = DateTime.Now;
-                    await repo.ActualizarUsuarioAsync(user);
-                }
             }
-            catch
-            {
-                // Se ignora cualquier error para no interrumpir el cierre de la aplicación
-            }
+            catch { }
         }
+
     }
 }

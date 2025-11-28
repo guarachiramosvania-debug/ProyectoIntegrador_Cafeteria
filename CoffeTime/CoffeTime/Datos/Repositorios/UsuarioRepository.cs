@@ -126,6 +126,25 @@ namespace CoffeTime.Datos.Repositorios
             }
         }
 
+        public async Task<bool> ActualizarOnlineSoloAsync(long idUsuario, bool online)
+        {
+            try
+            {
+                var response = await _client
+                    .From<UsuarioModel>()
+                    .Where(u => u.IdUsuario == idUsuario)
+                    .Set(x => x.Online, online)   // ? ESTA ES LA CLAVE
+                    .Update();
+
+                return response.Models.Count > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ERROR UPDATE ONLINE: " + ex.Message);
+                return false;
+            }
+        }
+
 
 
 

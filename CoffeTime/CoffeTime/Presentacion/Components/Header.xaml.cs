@@ -17,7 +17,7 @@ namespace CoffeTime.Presentacion.Components
                 TxtRol.Text = App.Current.Properties["RolUsuario"].ToString();
         }
 
-        // 🔥 NAVEGACIÓN DINÁMICA ENTRE VENTANAS
+        // NAVEGACIÓN SIN CERRAR SESIÓN
         private void MenuClick(object sender, RoutedEventArgs e)
         {
             string destino = (sender as Button)?.Tag?.ToString();
@@ -34,34 +34,21 @@ namespace CoffeTime.Presentacion.Components
                 case "Reportes": nuevaVentana = new ReportesView(); break;
             }
 
-            if (nuevaVentana != null)
-            {
-                nuevaVentana.Show();
-                Window.GetWindow(this)?.Close(); // Cierra la ventana actual
-            }
+            nuevaVentana?.Show();
+            Window.GetWindow(this)?.Close();
         }
 
-        // 🔥 CERRAR SESIÓN
+        // BOTÓN SALIR (LOGOUT REAL)
         private async void LogoutClick(object sender, RoutedEventArgs e)
         {
             if (App.Current.Properties["IdUsuario"] != null)
             {
-                long id = (long)App.Current.Properties["IdUsuario"];
                 var repo = new UsuarioRepository();
-                await repo.ActualizarOnlineAsync(id, false);
+                long id = (long)App.Current.Properties["IdUsuario"];
+                await repo.ActualizarOnlineSoloAsync(id, false);
             }
 
-            App.Current.Properties["IdUsuario"] = null;
-            App.Current.Properties["NombreUsuario"] = null;
-            App.Current.Properties["RolUsuario"] = null;
-
-            new LoginView().Show();
-            Window.GetWindow(this)?.Close();
+            Application.Current.Shutdown();
         }
-
-
-
-
-
     }
 }
