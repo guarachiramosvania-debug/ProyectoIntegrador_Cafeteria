@@ -1,0 +1,62 @@
+﻿<Window x:Class="CoffeTime.Presentacion.Views.RegistrarEntradaView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Registrar entrada de inventario"
+        Height="260" Width="420"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#FFF8F4E9">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Registrar entrada"
+                   FontSize="18"
+                   FontWeight="Bold"
+                   Foreground="#8B5E34"/>
+
+        <!-- Insumo -->
+        <StackPanel Grid.Row="1" Margin="0,16,0,0">
+            <TextBlock Text="Insumo" Margin="0,0,0,4"/>
+            <ComboBox x:Name="CmbInsumo"
+                      DisplayMemberPath="Nombre"
+                      SelectedValuePath="IdInsumo"
+                      Height="28"/>
+        </StackPanel>
+
+        <!-- Cantidad -->
+        <StackPanel Grid.Row="2" Margin="0,10,0,0">
+            <TextBlock Text="Cantidad a ingresar" Margin="0,0,0,4"/>
+            <TextBox x:Name="TxtCantidad" Height="26"/>
+        </StackPanel>
+
+        <!-- Costo total (opcional) -->
+        <StackPanel Grid.Row="3" Margin="0,10,0,0">
+            <TextBlock Text="Costo total (opcional)" Margin="0,0,0,4"/>
+            <TextBox x:Name="TxtCostoTotal" Height="26"/>
+        </StackPanel>
+
+        <!-- Botones -->
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,18,0,0"
+                    >
+            <Button Content="Cancelar"
+                    Width="90" Height="28"
+                    Margin="0,0,8,0"
+                    Click="BtnCancelar_Click"/>
+            <Button Content="Guardar"
+                    Width="100" Height="28"
+                    Background="#8B5E34"
+                    Foreground="White"
+                    Click="BtnGuardar_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

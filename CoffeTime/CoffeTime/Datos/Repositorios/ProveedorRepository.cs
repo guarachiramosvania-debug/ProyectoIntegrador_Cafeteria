@@ -13,17 +13,12 @@ namespace CoffeTime.Datos.Repositorios
             _client = SupabaseContext.Client;
         }
 
-        // Obtener todos
         public async Task<List<Proveedor>> GetAll()
         {
-            var result = await _client
-                .From<Proveedor>()
-                .Get();
-
+            var result = await _client.From<Proveedor>().Get();
             return result.Models;
         }
 
-        // Insertar proveedor
         public async Task<bool> Insert(Proveedor proveedor)
         {
             var result = await _client
@@ -33,7 +28,6 @@ namespace CoffeTime.Datos.Repositorios
             return result.Models.Count > 0;
         }
 
-        // Actualizar proveedor
         public async Task<bool> Update(Proveedor proveedor)
         {
             var result = await _client
@@ -44,8 +38,7 @@ namespace CoffeTime.Datos.Repositorios
             return result.Models.Count > 0;
         }
 
-        // Eliminar proveedor
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Delete(long id)
         {
             await _client
                 .From<Proveedor>()
@@ -55,7 +48,7 @@ namespace CoffeTime.Datos.Repositorios
             return true;
         }
 
-        public async Task<Proveedor?> GetById(int id)
+        public async Task<Proveedor?> GetById(long id)
         {
             var result = await _client
                 .From<Proveedor>()
@@ -64,6 +57,5 @@ namespace CoffeTime.Datos.Repositorios
 
             return result;
         }
-
     }
 }
