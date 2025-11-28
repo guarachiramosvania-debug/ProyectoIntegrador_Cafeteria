@@ -4,7 +4,7 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Title="Login"
-        Width="900" Height="600"
+        Width="900" Height="656"
         Background="Transparent"
         WindowStyle="None"
         AllowsTransparency="True">
@@ -36,22 +36,20 @@
 
             <StackPanel>
 
-                <!-- LOGO -->
-                <Image Source="/Presentacion/Resources/logo.png"
-                       Width="110" Height="110"
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,10"/>
+
+
+                <Image Source="/Presentacion/Resources/logo.png" Width="186" Height="117" Margin="0,0,10,0"/>
 
                 <!-- TÍTULO -->
                 <TextBlock Text="CoffeeTime"
                            HorizontalAlignment="Center"
-                           FontSize="26"
+                           FontSize="35"
                            FontWeight="Bold"
-                           Foreground="#6A3E12"/>
+                           Foreground="#6A3E12" Height="59" Width="220"/>
 
                 <TextBlock Text="Sistema de Gestión"
                            HorizontalAlignment="Center"
-                           FontSize="14"
+                           FontSize="20"
                            Margin="0,3,0,25"
                            Foreground="#8B6C4A"/>
 
@@ -59,9 +57,9 @@
                 <TextBlock Text="Usuario"
                            FontWeight="SemiBold"
                            Margin="5,0,0,5"
-                           Foreground="#6A3E12"/>
+                           Foreground="#6A3E12" FontSize="18"/>
 
-                <Border BorderBrush="#D8C6A1" BorderThickness="1.3" CornerRadius="10" Padding="8" Background="White">
+                <Border BorderBrush="#D8C6A1" BorderThickness="1.3" CornerRadius="10" Padding="8" Background="White" Height="53">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="28"/>
@@ -85,9 +83,9 @@
                 <TextBlock Text="Contraseña"
                            FontWeight="SemiBold"
                            Margin="5,20,0,5"
-                           Foreground="#6A3E12"/>
+                           Foreground="#6A3E12" FontSize="18"/>
 
-                <Border BorderBrush="#D8C6A1" BorderThickness="1.3" CornerRadius="10" Padding="8" Background="White">
+                <Border BorderBrush="#D8C6A1" BorderThickness="1.3" CornerRadius="10" Padding="8" Background="White" Height="56">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="28"/>
@@ -104,17 +102,29 @@
                                      Background="Transparent"
                                      Padding="3"
                                      Foreground="#333"/>
+
+
                     </Grid>
                 </Border>
+
+                <TextBlock x:Name="ErrorTextBlock" 
+    Foreground="Red"
+    HorizontalAlignment="Center"
+    Margin="0,15,0,5"
+    FontWeight="SemiBold"
+    TextWrapping="Wrap" 
+    TextAlignment="Center">
+                </TextBlock>
+
 
                 <!-- BOTÓN LOGIN -->
                 <Button Click="LoginButton_Click"
                         Margin="0,30,0,0"
-                        Height="48"
+                        Height="64"
                         Cursor="Hand"
                         Background="#C67611"
                         Foreground="White"
-                        FontSize="16"
+                        FontSize="22"
                         BorderThickness="0">
 
                     <Button.Template>

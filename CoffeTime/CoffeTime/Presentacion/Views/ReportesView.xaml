@@ -10,18 +10,17 @@
 
     <Grid>
 
-        <!-- ===================== FILAS DEL LAYOUT ===================== -->
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
-            <!-- HEADER -->
             <RowDefinition Height="*"/>
-            <!-- CONTENIDO -->
         </Grid.RowDefinitions>
 
-        <!-- ===================== HEADER GLOBAL ======================== -->
         <components:Header Grid.Row="0"/>
 
-        <!-- ===================== CONTENIDO PRINCIPAL ================== -->
+
+        <Image Source="/Presentacion/Resources/logo.png" Width="45" Height="45" Margin="10,10,1045,25"/>
+
+
         <ScrollViewer Grid.Row="1">
             <StackPanel Margin="30">
 
@@ -31,22 +30,19 @@
                            Foreground="#8B5E34"
                            Margin="0,0,0,20"/>
 
-                <!-- TARJETAS SUPERIORES -->
                 <UniformGrid Rows="1" Columns="4" Margin="0,0,0,30">
 
-                    <!-- Ventas totales -->
                     <Border CornerRadius="15" Margin="5" Background="White"
                             Padding="15" BorderBrush="#F1D5A5" BorderThickness="1">
                         <StackPanel>
                             <TextBlock Text="Ventas Totales" FontWeight="Bold" Foreground="#8B5E34"/>
-                            <TextBlock x:Name="txtVentasTotales" Text="$0.00"
+                            <TextBlock x:Name="txtVentasTotales" 
                                        FontSize="22" FontWeight="Bold" Margin="0,5,0,0"
                                        Foreground="#E0912D"/>
                             <TextBlock Text="Desde el inicio" FontSize="11" Foreground="Gray"/>
                         </StackPanel>
                     </Border>
 
-                    <!-- Total pedidos -->
                     <Border CornerRadius="15" Margin="5" Background="White"
                             Padding="15" BorderBrush="#F1D5A5" BorderThickness="1">
                         <StackPanel>
@@ -58,37 +54,34 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Ticket promedio -->
                     <Border CornerRadius="15" Margin="5" Background="White"
                             Padding="15" BorderBrush="#F1D5A5" BorderThickness="1">
                         <StackPanel>
                             <TextBlock Text="Ticket Promedio" FontWeight="Bold" Foreground="#8B5E34"/>
-                            <TextBlock x:Name="txtTicketPromedio" Text="$0.00"
+                            <TextBlock x:Name="txtTicketPromedio" 
                                        FontSize="22" FontWeight="Bold" Margin="0,5,0,0"
                                        Foreground="#E0912D"/>
                             <TextBlock Text="Por pedido" FontSize="11" Foreground="Gray"/>
                         </StackPanel>
                     </Border>
 
-                    <!-- Botón exportar -->
                     <Border CornerRadius="15" Margin="5" Background="#E0912D">
                         <Button x:Name="btnExportarReporte"
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Foreground="White"
                                 FontWeight="Bold"
-                                Content="Exportar Reporte"/>
+                                Content="Exportar Reporte"
+                                Click="BtnExportarReporte_Click" />
                     </Border>
                 </UniformGrid>
 
-                <!-- VENTAS POR DÍA Y PRODUCTOS MÁS VENDIDOS -->
                 <Grid Margin="0,0,0,30">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Ventas por día -->
                     <GroupBox Header="Ventas por Día" Grid.Column="0" FontWeight="Bold" BorderBrush="#F1D5A5">
                         <StackPanel Margin="10">
                             <DataGrid x:Name="dgVentasPorDia"
@@ -96,15 +89,14 @@
                                       CanUserAddRows="False"
                                       IsReadOnly="True">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha}" Width="*"/>
+                                    <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat='dd/MM/yyyy'}" Width="*"/>
                                     <DataGridTextColumn Header="Pedidos" Binding="{Binding CantidadPedidos}" Width="*"/>
-                                    <DataGridTextColumn Header="Total" Binding="{Binding TotalVentas}" Width="*"/>
+                                    <DataGridTextColumn Header="Total" Binding="{Binding TotalVentas, StringFormat=C2}" Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
                     </GroupBox>
 
-                    <!-- Productos más vendidos -->
                     <GroupBox Header="Productos Más Vendidos" Grid.Column="1" FontWeight="Bold" BorderBrush="#F1D5A5">
                         <StackPanel Margin="10">
                             <DataGrid x:Name="dgProductosMasVendidos"
@@ -115,14 +107,13 @@
                                     <DataGridTextColumn Header="#" Binding="{Binding Posicion}" Width="50"/>
                                     <DataGridTextColumn Header="Producto" Binding="{Binding NombreProducto}" Width="*"/>
                                     <DataGridTextColumn Header="Vendidos" Binding="{Binding CantidadVendida}" Width="*"/>
-                                    <DataGridTextColumn Header="Total" Binding="{Binding MontoTotal}" Width="*"/>
+                                    <DataGridTextColumn Header="Total" Binding="{Binding MontoTotal, StringFormat=C2}" Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
                     </GroupBox>
                 </Grid>
 
-                <!-- VENTAS MENSUALES -->
                 <GroupBox Header="Ventas Mensuales" FontWeight="Bold" BorderBrush="#F1D5A5">
                     <StackPanel Margin="10">
 
@@ -132,7 +123,8 @@
                             <Button x:Name="btnCargarVentasMensuales"
                                     Content="Cargar"
                                     Width="100"
-                                    Margin="10,0,0,0"/>
+                                    Margin="10,0,0,0"
+                                    Click="BtnCargarVentasMensuales_Click"/>
                         </StackPanel>
 
                         <DataGrid x:Name="dgVentasMensuales"
@@ -142,7 +134,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Mes" Binding="{Binding MesNombre}" Width="*"/>
                                 <DataGridTextColumn Header="Pedidos" Binding="{Binding CantidadPedidos}" Width="*"/>
-                                <DataGridTextColumn Header="Total" Binding="{Binding TotalVentas}" Width="*"/>
+                                <DataGridTextColumn Header="Total" Binding="{Binding TotalVentas, StringFormat=C2}" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
 
