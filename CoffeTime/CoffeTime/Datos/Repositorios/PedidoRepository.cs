@@ -1,71 +1,95 @@
 using CoffeTime.Datos.Conexion;
-using CoffeTime.Negocio.Modelos;
+using CoffeTime.Negocio.Models;
 using Supabase;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-public class PedidoRepository
+namespace CoffeTime.Datos.Repositorios
 {
-    private readonly Supabase.Client _client;
-
-    public PedidoRepository(Supabase.Client client = null)
+    public class PedidoRepository
     {
-        _client = client ?? SupabaseContext.Client;
+        private readonly Client _db;
+
+        public PedidoRepository()
+        {
+            _db = SupabaseContext.Client;
+        }
+
+        // ================================
+        // 1) Obtener lista de pedidos
+        // ================================
+        public async Task<List<PedidoVistaDto>> ObtenerPedidosAsync()
+        {
+            try
+            {
+                var resp = await _db
+                    .From<Pedido>()
+                    .Get();
+
+                var pedidos = resp.Models.ToList();
+
+                // DEBUG: para ver si realmente viene algo
+                System.Diagnostics.Debug.WriteLine($"[PedidoRepository] pedidos en BD: {pedidos.Count}");
+
+                var lista = pedidos
+                    .OrderByDescending(p => p.IdPedido)
+                    .Select(p => new PedidoVistaDto
+                    {
+                        IdPedido = p.IdPedido,
+                        NumeroPedido = p.NumeroPedido,
+                        NombrePedido = $"Pedido #{p.NumeroPedido}",
+                        Estado = p.Estado,
+                        FechaHora = p.Fecha.ToString("dd/MM/yyyy HH:mm"),
+                        MetodoPago = p.MetodoPago,
+                        Total = p.Total.ToString("0.00"),
+                        Productos = new List<string>() // de momento vacío
+                    })
+                    .ToList();
+
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("ERROR obteniendo pedidos: " + ex);
+                return new List<PedidoVistaDto>();
+            }
+        }
+
+        // ================================
+        // 2) Cancelar pedido
+        // ================================
+        public async Task<bool> CancelarPedidoAsync(long idPedido)
+        {
+            try
+            {
+                var resp = await _db
+                    .From<Pedido>()
+                    .Where(p => p.IdPedido == idPedido)
+                    .Get();
+
+                var pedido = resp.Models.FirstOrDefault();
+                if (pedido == null)
+                    return false;
+
+                pedido.Estado = "Cancelado";
+
+                await _db.From<Pedido>().Update(pedido);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("ERROR cancelando pedido: " + ex);
+                return false;
+            }
+        }
+
+        internal async Task<bool> CrearPedidoAsync(int numeroPedido, string metodoPago, long idUsuario, List<(int idProducto, int cantidad)> items)
+        {
+            throw new NotImplementedException();
+        }
+
+        // De momento NO creamos pedidos desde aquí
     }
-
-
-    public async Task<long> CrearPedido(Pedido pedido)
-    {
-        var result = await _client
-            .From<Pedido>()
-            .Insert(pedido);
-
-        return result.Models[0].IdPedido;
-    }
-
-    public async Task<Pedido> ObtenerPedido(long idPedido)
-    {
-        var result = await _client
-            .From<Pedido>()
-            .Where(p => p.IdPedido == idPedido)
-            .Single();
-
-        return result;
-    }
-
-    public async Task<List<Pedido>> ObtenerTodos()
-    {
-        var result = await _client
-            .From<Pedido>()
-            .Get();
-
-        return result.Models;
-    }
-
-    // LA FUNCIÓN 100% FUNCIONAL
-    public async Task ActualizarEstado(long idPedido, string nuevoEstado)
-    {
-        var pedido = await _client
-            .From<Pedido>()
-            .Where(p => p.IdPedido == idPedido)
-            .Single();
-
-        if (pedido == null)
-            throw new Exception("El pedido no existe.");
-
-        pedido.Estado = nuevoEstado;
-
-        await _client
-            .From<Pedido>()
-            .Where(p => p.IdPedido == idPedido)
-            .Update(pedido);
-    }
-    public async Task<List<Pedido>> GetAll()
-    {
-        var result = await _client
-            .From<Pedido>()
-            .Select("*")
-            .Get();
-
-        return result.Models;
-    }
-
 }

@@ -7,13 +7,13 @@ namespace CoffeTime.Negocio.Modelos
     public class DetallePedido : BaseModel
     {
         [PrimaryKey("id_detalle")]
-        public long IdDetalle { get; set; }
+        public int IdDetalle { get; set; }
 
         [Column("id_pedido")]
-        public long IdPedido { get; set; }
+        public int IdPedido { get; set; }
 
         [Column("id_producto")]
-        public long IdProducto { get; set; }
+        public int IdProducto { get; set; }
 
         [Column("cantidad")]
         public int Cantidad { get; set; }

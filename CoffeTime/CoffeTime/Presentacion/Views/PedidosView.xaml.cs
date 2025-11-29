@@ -1,39 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CoffeTime.Negocio.Servicios;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace CoffeTime.Presentacion.Views
 {
-    /// <summary>
-    /// Interaction logic for PedidosView.xaml
-    /// </summary>
     public partial class PedidosView : Window
     {
+        private readonly PedidoService _service = new PedidoService();
+
         public PedidosView()
         {
             InitializeComponent();
-            MantenerUsuarioOnline();
+            Loaded += PedidosView_Loaded;
         }
-        private async void MantenerUsuarioOnline()
-        {
-            if (App.Current.Properties["IdUsuario"] is long id)
-            {
-                var usuario = await new UsuarioRepository().ObtenerPorIdAsync(id);
 
-                if (usuario != null)
-                {
-                    await new UsuarioRepository().ActualizarOnlineSoloAsync(usuario.IdUsuario, true);
-                }
+        private async void PedidosView_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var lista = await _service.ObtenerPedidosAsync();
+
+                MessageBox.Show($"Pedidos recibidos: {lista.Count}");
+
+                icListaPedidos.ItemsSource = lista;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error cargando pedidos: " + ex.Message);
+            }
+        }
+
+        private void BtnNuevoPedido_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Crear pedido aún no implementado.");
+        }
+
+        private async void BtnCancelarPedido_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement fe &&
+                fe.Tag is long id)
+            {
+                await _service.CancelarPedidoAsync(id);
+                PedidosView_Loaded(null, null);
             }
         }
     }
