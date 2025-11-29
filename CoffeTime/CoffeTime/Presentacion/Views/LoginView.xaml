@@ -115,7 +115,6 @@
     TextAlignment="Center">
                 </TextBlock>
 
-
                 <!-- BOTÓN LOGIN -->
                 <Button Click="LoginButton_Click"
                         Margin="0,30,0,0"
@@ -130,7 +129,7 @@
                         <ControlTemplate TargetType="Button">
                             <Border Background="{TemplateBinding Background}" CornerRadius="10">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock Text="" FontFamily="FontAwesome" Margin="0,0,8,0"/>
+                                    <TextBlock Text="" FontFamily="FontAwesome" Margin="0,0,8,0"/>
                                     <ContentPresenter/>
                                 </StackPanel>
                             </Border>
