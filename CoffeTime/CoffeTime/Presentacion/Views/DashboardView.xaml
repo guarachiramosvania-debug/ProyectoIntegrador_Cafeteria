@@ -106,7 +106,8 @@
                             Foreground="White"
                             Padding="10"
                             Margin="20,0,0,0"
-                            Click="btnNuevoPedidoRapido_Click"  Command="{Binding NewQuickOrderCommand}">
+                            Click="btnNuevoPedidoRapido_Click"
+                            Command="{Binding NewQuickOrderCommand}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="➕" Margin="0,0,10,0"/>
                             <TextBlock Text="Nuevo Pedido Rápido" FontWeight="Bold"/>

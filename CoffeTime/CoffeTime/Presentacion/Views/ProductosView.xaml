@@ -114,7 +114,7 @@
                                             <TextBlock Text="{Binding Categoria}"
                                                        Foreground="#777"/>
 
-                                            <TextBlock Text="{Binding Precio, StringFormat='${0:F2}'}"
+                                            <TextBlock Text="{Binding Precio, StringFormat='Bs {0:F2}'}"
                                                        FontSize="14"
                                                        FontWeight="SemiBold"
                                                        Margin="0,4,0,0"/>

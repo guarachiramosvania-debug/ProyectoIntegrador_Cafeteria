@@ -1,11 +1,15 @@
-﻿using CoffeTime.Negocio.Modelos; // Ajusta este namespace si es necesario
-using CoffeTime.Presentacion.Commands; // Necesario para RelayCommand
+﻿using CoffeTime.Negocio.Modelos;
+using CoffeTime.Presentacion.Commands;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
-using CoffeTime.Presentacion.Views;
+using System.Linq;
+using System.Threading.Tasks;
+using CoffeTime.Datos.Conexion;
+using Supabase;
+using CoffeTime.Datos.Repositorios; // Asegúrate de que existe UsuarioRepository
 
 namespace CoffeTime.Presentacion.Views
 {
@@ -17,8 +21,6 @@ namespace CoffeTime.Presentacion.Views
         public DashboardView()
         {
             InitializeComponent();
-
-            // Asignar el ViewModel
             DataContext = new DashboardViewModel();
 
             var vm = (DashboardViewModel)DataContext;
@@ -28,31 +30,25 @@ namespace CoffeTime.Presentacion.Views
             {
                 vm.LoadDashboardDataCommand.Execute(null);
             }
+            MantenerUsuarioOnline();
         }
 
-        // Lógica de simulación de estado de usuario
         private async void MantenerUsuarioOnline()
         {
-            if (App.Current.Properties["IdUsuario"] is long id)
+            if (Application.Current.Properties["IdUsuario"] is long id)
             {
+                // ** Asegúrate de que UsuarioRepository existe **
                 await new UsuarioRepository().ActualizarOnlineSoloAsync(id, true);
             }
         }
-
-
 
         // 🎯 1. NAVEGACIÓN A PEDIDOS (Acceso Rápido y Nuevo Pedido Rápido)
         private void AbrirPedidosView()
         {
             try
             {
-                // Instanciar la ventana de Pedidos
                 PedidosView pedidosWindow = new PedidosView();
-
-                // Mostrar la nueva ventana
                 pedidosWindow.Show();
-
-                // Cerrar la ventana actual (Dashboard)
                 this.Close();
             }
             catch (Exception ex)
@@ -61,13 +57,11 @@ namespace CoffeTime.Presentacion.Views
             }
         }
 
-        // Manejador del botón de Acceso Rápido a Pedidos
         private void btnAccesoPedidos_Click(object sender, RoutedEventArgs e)
         {
             AbrirPedidosView();
         }
 
-        // Manejador del botón Nuevo Pedido Rápido
         private void btnNuevoPedidoRapido_Click(object sender, RoutedEventArgs e)
         {
             AbrirPedidosView();
@@ -91,8 +85,9 @@ namespace CoffeTime.Presentacion.Views
         }
     }
 
+
     // =========================================================
-    // BASE DE VIEWMODEL (Para implementar INotifyPropertyChanged)
+    // BASE DE VIEWMODEL
     // =========================================================
     public class ViewModelBase : INotifyPropertyChanged
     {
@@ -105,50 +100,39 @@ namespace CoffeTime.Presentacion.Views
     }
 
 
-    // =========================================================
-    // VIEWMODEL ESPECÍFICO DEL DASHBOARD
-    // =========================================================
+    
     public class DashboardViewModel : ViewModelBase
     {
-        // -----------------------------------------------------
+        
+        // Conexión directa a Supabase
+        
+        private readonly Supabase.Client _client = SupabaseContext.Client;
+
+        
         // Propiedades de Datos (Dashboard Cards)
-        // -----------------------------------------------------
+        
         private decimal _ventasDelDia;
         public decimal VentasDelDia
         {
             get => _ventasDelDia;
-            set
-            {
-                _ventasDelDia = value;
-                OnPropertyChanged();
-            }
+            set { _ventasDelDia = value; OnPropertyChanged(); }
         }
 
         private int _pedidosDelDia;
         public int PedidosDelDia
         {
             get => _pedidosDelDia;
-            set
-            {
-                _pedidosDelDia = value;
-                OnPropertyChanged();
-            }
+            set { _pedidosDelDia = value; OnPropertyChanged(); }
         }
 
         private int _alertasDeStock;
         public int AlertasDeStock
         {
             get => _alertasDeStock;
-            set
-            {
-                _alertasDeStock = value;
-                OnPropertyChanged();
-            }
+            set { _alertasDeStock = value; OnPropertyChanged(); }
         }
 
-        // -----------------------------------------------------
-        // Comandos (Bindings)
-        // -----------------------------------------------------
+        
         public ICommand LoadDashboardDataCommand { get; private set; }
         public ICommand NewQuickOrderCommand { get; private set; }
         public ICommand NavigateToOrdersCommand { get; private set; }
@@ -156,27 +140,63 @@ namespace CoffeTime.Presentacion.Views
 
         public DashboardViewModel()
         {
-            // Inicialización de comandos
             LoadDashboardDataCommand = new RelayCommand(ExecuteLoadDashboardData);
 
-            // Los comandos de navegación se mantienen para los bindings de XAML, 
-            // pero la lógica real la maneja el Code-Behind (eventos Click)
+            // Comandos de navegación se mantienen enlazados aunque la lógica esté en el Code-Behind
             NavigateToOrdersCommand = new RelayCommand(p => { /* Lógica en Code-Behind */ });
-            NavigateToInventoryCommand = new RelayCommand(p => { /* Lógica en Code-Behind */ });
             NewQuickOrderCommand = new RelayCommand(p => { /* Lógica en Code-Behind */ });
+            NavigateToInventoryCommand = new RelayCommand(p => { /* Lógica en Code-Behind */ });
         }
 
 
-        private void ExecuteLoadDashboardData(object parameter)
+        private async void ExecuteLoadDashboardData(object parameter)
         {
             try
             {
-                // SIMULACIÓN DE CARGA DE DATOS
-                VentasDelDia = 450.75m;
-                PedidosDelDia = 12;
-                AlertasDeStock = 3;
+                // 1. Cargar Ventas y Pedidos del Día
+                await LoadVentasPedidosAsync();
+
+                // 2. Cargar Alertas de Stock
+                await LoadAlertasStockAsync();
             }
-            catch { /* Manejo de errores */ }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar datos del dashboard: {ex.Message}", "Error de Carga", MessageBoxButton.OK, MessageBoxImage.Error);
+                VentasDelDia = 0m;
+                PedidosDelDia = 0;
+                AlertasDeStock = 0;
+            }
+        }
+
+        // Lógica para obtener ventas y pedidos usando Supabase.Client directamente
+        private async Task LoadVentasPedidosAsync()
+        {
+            // Obtener todos los pedidos
+            var response = await _client.From<Pedido>().Get();
+            var todosLosPedidos = response.Models;
+
+            // Filtrar por la fecha de hoy y estado "Pagado"
+            var pedidosDelDiaPagados = todosLosPedidos
+                .Where(p => p.Fecha.Date == DateTime.Today.Date && p.Estado == "Pagado")
+                .ToList();
+
+            // Usamos la propiedad 'Total' según tu PedidoService
+            VentasDelDia = pedidosDelDiaPagados.Sum(p => p.Total);
+            PedidosDelDia = pedidosDelDiaPagados.Count;
+        }
+
+        // Lógica para obtener alertas de stock usando Supabase.Client directamente
+        private async Task LoadAlertasStockAsync(int limiteStockBajo = 5)
+        {
+            // Obtener todos los insumos
+            // ** NOTA: Asumo que el modelo de Insumo está en Negocio/Modelos
+            var response = await _client.From<Insumo>().Get();
+            var insumos = response.Models;
+
+            // Contar aquellos cuya cantidad en stock es menor o igual al límite (usamos StockActual)
+            AlertasDeStock = insumos
+                // ** Usamos StockActual, como se ve en tu PedidoService al descontar stock **
+                .Count(i => i.StockActual <= limiteStockBajo);
         }
 
     }
