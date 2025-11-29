@@ -17,10 +17,10 @@
 
             <!-- LOGO -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Image Source="/Presentacion/Resources/logo.png"
-                       Width="45"
-                       Height="45"
-                       Margin="0,0,10,0"/>
+                <Image Source="pack://application:,,,/CoffeTime;component/Presentacion/Resources/logo.png"
+       Width="45" Height="45" Stretch="Uniform"
+/>
+
 
                 <StackPanel>
                     <TextBlock Text="CoffeeTime"
@@ -53,49 +53,49 @@
                         Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
             </StackPanel>
 
-            <!-- PERFIL + HORA + LOGOUT -->
-            <StackPanel Grid.Column="2"
+           <!-- PERFIL + HORA + LOGOUT -->
+<StackPanel Grid.Column="2"
             Orientation="Horizontal"
             VerticalAlignment="Center"
             HorizontalAlignment="Right">
 
-                <!-- HORA -->
-                <TextBlock x:Name="TxtHora"
+    <!-- HORA -->
+    <TextBlock x:Name="TxtHora"
                FontSize="14"
                Foreground="#6B4F2A"
                VerticalAlignment="Center"
                Margin="0 0 15 0"/>
 
-                <!-- ICONO + USUARIO -->
-                <StackPanel Orientation="Horizontal"
+    <!-- ICONO + USUARIO -->
+    <StackPanel Orientation="Horizontal"
                 VerticalAlignment="Center"
                 Margin="0 0 15 0">
 
-                    <TextBlock Text="👤"
+        <TextBlock Text="👤"
                    FontSize="20"
                    Margin="0,0,5,0"
                    VerticalAlignment="Center"/>
 
-                    <StackPanel>
-                        <TextBlock x:Name="TxtNombre"
+        <StackPanel>
+            <TextBlock x:Name="TxtNombre"
                        FontWeight="Bold"
                        HorizontalAlignment="Right"/>
-                        <TextBlock x:Name="TxtRol"
+            <TextBlock x:Name="TxtRol"
                        FontSize="11"
                        Foreground="Gray"
                        HorizontalAlignment="Right"/>
-                    </StackPanel>
-                </StackPanel>
+        </StackPanel>
+    </StackPanel>
 
-                <!-- LOGOUT -->
-                <Button Content="🔓 Salir"
+    <!-- LOGOUT -->
+    <Button Content="🔓 Salir"
             Background="#E53935"
             Foreground="White"
             BorderThickness="0"
             Padding="10 4"
             Click="LogoutClick"
             Cursor="Hand"/>
-            </StackPanel>
+</StackPanel>
 
 
         </Grid>
