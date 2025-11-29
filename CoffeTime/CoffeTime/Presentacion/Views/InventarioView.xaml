@@ -6,7 +6,10 @@
         xmlns:comp="clr-namespace:CoffeTime.Presentacion.Components"
         mc:Ignorable="d"
         Title="Gestión de Inventario"
-        Height="700" Width="1150"
+        Width="1300"
+        Height="750"
+        MinWidth="1200"
+        MinHeight="750"
         Background="#FFF8F4E9"
         WindowStartupLocation="CenterScreen">
 

@@ -4,7 +4,10 @@
         xmlns:local="clr-namespace:CoffeTime.Presentacion.Converters"
         xmlns:components="clr-namespace:CoffeTime.Presentacion.Components"
         Title="Gestión de Pedidos"
-        Height="750" Width="1150"
+       Width="1300"
+        Height="750"
+        MinWidth="1200"
+        MinHeight="750"
         Background="#FFF8F4E9"
         WindowStartupLocation="CenterScreen">
 

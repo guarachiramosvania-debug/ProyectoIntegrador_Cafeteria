@@ -3,7 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:components="clr-namespace:CoffeTime.Presentacion.Components"
         Title="Nuevo Pedido"
-        Height="750" Width="1150"
+       Width="1300"
+        Height="750"
+        MinWidth="1200"
+        MinHeight="750"
         Background="#FFF8F4E9"
         WindowStartupLocation="CenterScreen">
 

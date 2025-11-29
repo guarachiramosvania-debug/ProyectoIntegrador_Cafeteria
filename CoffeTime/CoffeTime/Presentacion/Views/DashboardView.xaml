@@ -3,7 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:comp="clr-namespace:CoffeTime.Presentacion.Components"
         Title="Dashboard"
-        Height="700" Width="1100"
+        Width="1300"
+
+        Height="750" MinWidth="1200"
+MinHeight="750"
         WindowStartupLocation="CenterScreen"
         Background="#FFF8F4E9">
 
@@ -14,7 +17,6 @@
         </Grid.RowDefinitions>
 
         <comp:Header Grid.Row="0"/>
-        <Image Source="/Presentacion/Resources/logo.png" Width="45" Height="45" Margin="10,18,1045,18"/>
 
         <ScrollViewer Grid.Row="1" Padding="40" VerticalScrollBarVisibility="Auto">
             <StackPanel>

@@ -4,8 +4,10 @@
 xmlns:comp="clr-namespace:CoffeTime.Presentacion.Components"
 
         Title="Gestión de Proveedores"
-        Width="1100"
-        Height="700"
+     Width="1300"
+        Height="750"
+        MinWidth="1200"
+        MinHeight="750"
         Background="#FFF8F4E9"
         WindowStartupLocation="CenterScreen">
 

@@ -3,7 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:components="clr-namespace:CoffeTime.Presentacion.Components"
         Title="Gestión de Productos"
-        Height="900" Width="1400"
+       Width="1200"
+        Height="750"
+        MinWidth="1300"
+        MinHeight="750"
         Background="#FFF8F4E9"
         WindowStartupLocation="CenterScreen">
 
