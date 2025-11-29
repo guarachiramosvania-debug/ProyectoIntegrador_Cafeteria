@@ -1,4 +1,5 @@
-﻿using CoffeTime.Negocio.Modelos;
+﻿using CoffeTime.Datos.Conexion;
+using CoffeTime.Negocio.Modelos;
 using Supabase;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,7 +10,11 @@ public class ProductoInsumoRepository
 
     public ProductoInsumoRepository(Client client)
     {
-        _client = client;
+        _client = SupabaseContext.Client;
+    }
+    public ProductoInsumoRepository()
+    {
+        _client = SupabaseContext.Client;
     }
 
     public async Task<List<ProductoInsumo>> ObtenerPorProductoAsync(long idProducto)
@@ -20,5 +25,13 @@ public class ProductoInsumoRepository
             .Get();
 
         return resp.Models;
+    }
+    public async Task<bool> Insert(ProductoInsumo pi)
+    {
+        var result = await _client
+            .From<ProductoInsumo>()
+            .Insert(pi);
+
+        return result.Models.Count > 0;
     }
 }

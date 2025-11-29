@@ -66,8 +66,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="" FontFamily="FontAwesome" FontSize="16" 
-                                   VerticalAlignment="Center" Foreground="#B87B34"/>
+                        <Image Margin="0,0,5,0" Source="https://marketplace.canva.com/A5alg/MAESXCA5alg/1/tl/canva-user-icon-MAESXCA5alg.png" Stretch="Fill"/>
 
                         <TextBox x:Name="UsernameTextBox"
                                  Grid.Column="1"
@@ -89,11 +88,11 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="28"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="34*"/>
+                            <ColumnDefinition Width="269*"/>
                         </Grid.ColumnDefinitions>
+                        <Image Source="/Presentacion/Assets/Productos/png-clipart-padlock-logo-computer-icons-padlock-technic-logo.png" />
 
-                        <TextBlock Text="" FontFamily="FontAwesome" FontSize="16"
-                                   VerticalAlignment="Center" Foreground="#B87B34"/>
 
                         <PasswordBox x:Name="PasswordPasswordBox"
                                      Grid.Column="1"
@@ -101,7 +100,7 @@
                                      BorderThickness="0"
                                      Background="Transparent"
                                      Padding="3"
-                                     Foreground="#333"/>
+                                     Foreground="#333" Grid.ColumnSpan="2"/>
 
 
                     </Grid>

@@ -94,8 +94,11 @@ namespace CoffeTime.Presentacion.Views
         // ======================================================
         private void BtnNuevoProducto(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Aquí se abrirá el formulario de nuevo producto.");
+            var win = new NuevoProductoView();
+            win.ShowDialog();
+            CargarProductos(); // refresca lista
         }
+
 
         // ======================================================
         //   EDITAR PRODUCTO
