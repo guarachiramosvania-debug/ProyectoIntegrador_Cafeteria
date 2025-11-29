@@ -72,30 +72,52 @@ namespace CoffeTime.Negocio.Servicios
         // ====================================================
         public async Task MarcarComoPagado(long idPedido)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
+            Debug.WriteLine("=== INICIANDO PROCESO DE PAGAR PEDIDO ===");
+
+            // 1?? Cambiar estado a Pagado
+            Debug.WriteLine($"? Cambiando estado del pedido {idPedido}...");
             await _client
                 .From<Pedido>()
                 .Where(p => p.IdPedido == idPedido)
                 .Set(x => x.Estado, "Pagado")
                 .Update();
 
-            // Descontar stock
+            Debug.WriteLine($"? Estado cambiado en {sw.ElapsedMilliseconds} ms");
+
+            // 2?? Obtener detalles del pedido
+            Debug.WriteLine("? Obteniendo detalles...");
             var detalles = await _client
                 .From<DetallePedido>()
                 .Where(d => d.IdPedido == idPedido)
                 .Get();
+
+            Debug.WriteLine($"? Detalles obtenidos en {sw.ElapsedMilliseconds} ms");
+
+            // 3?? Por cada detalle, obtener insumos
             foreach (var det in detalles.Models)
             {
+                Debug.WriteLine($"? Detalle: IdProducto={det.IdProducto}, Cantidad={det.Cantidad}");
+
                 var piList = await _client
                     .From<ProductoInsumo>()
                     .Where(pi => pi.IdProducto == det.IdProducto)
                     .Get();
 
+                Debug.WriteLine($"? ProductoInsumo obtenido en {sw.ElapsedMilliseconds} ms");
+
                 foreach (var pi in piList.Models)
                 {
+                    Debug.WriteLine($"? Descontando insumo {pi.IdInsumo}");
+
                     var insumo = await _client
                         .From<Insumo>()
                         .Where(i => i.IdInsumo == pi.IdInsumo)
                         .Single();
+
+                    Debug.WriteLine($"? Insumo obtenido en {sw.ElapsedMilliseconds} ms");
 
                     insumo.StockActual -= (pi.Cantidad * det.Cantidad);
 
@@ -103,10 +125,14 @@ namespace CoffeTime.Negocio.Servicios
                         .From<Insumo>()
                         .Where(i => i.IdInsumo == pi.IdInsumo)
                         .Update(insumo);
+
+                    Debug.WriteLine($"? Insumo actualizado en {sw.ElapsedMilliseconds} ms");
                 }
             }
 
+            Debug.WriteLine($"=== PROCESO COMPLETO EN {sw.ElapsedMilliseconds} ms ===");
         }
+
 
         // ====================================================
         // CANCELAR PEDIDO
@@ -127,7 +153,37 @@ namespace CoffeTime.Negocio.Servicios
         {
             try
             {
-                // Obtener siguiente número de pedido
+                if (items == null || items.Count == 0)
+                    return false;
+
+                // 1?? Cargar TODOS los productos una sola vez
+                var productosResp = await _client.From<Producto>().Get();
+                var productosDic = productosResp.Models.ToDictionary(p => p.Id);
+
+                decimal total = 0;
+                var detallesAInsertar = new List<DetallePedido>();
+
+                // 2?? Construir los detalles en memoria y calcular el total
+                foreach (var item in items)
+                {
+                    if (!productosDic.TryGetValue(item.idProducto, out var prod))
+                        continue; // si no lo encuentra, lo salta
+
+                    decimal subtotal = prod.Precio * item.cantidad;
+                    total += subtotal;
+
+                    detallesAInsertar.Add(new DetallePedido
+                    {
+                        IdProducto = item.idProducto,
+                        Cantidad = item.cantidad,
+                        Subtotal = subtotal
+                    });
+                }
+
+                if (total <= 0 || detallesAInsertar.Count == 0)
+                    return false;
+
+                // 3?? Obtener siguiente número de pedido
                 var response = await _client
                     .From<Pedido>()
                     .Order(p => p.IdPedido, Supabase.Postgrest.Constants.Ordering.Descending)
@@ -138,56 +194,34 @@ namespace CoffeTime.Negocio.Servicios
                 if (response.Models.Count > 0)
                     numero = response.Models[0].NumeroPedido + 1;
 
-                // Crear pedido
+                // 4?? Crear pedido ya con Total correcto (sin UPDATE después)
                 var pedido = new Pedido
                 {
                     NumeroPedido = numero,
                     Fecha = DateTime.Now,
-                    Estado = "Pendiente",
+                    Estado = "Pendiente",      // cuidado con mayús/minús según tu CHECK
                     MetodoPago = metodoPago,
-                    Total = 0,                     // Se actualizará después
+                    Total = total,
                     IdUsuario = idUsuario
                 };
 
-                // INSERT pedido
+                // Insertar pedido
                 var insertPedido = await _client
                     .From<Pedido>()
                     .Insert(pedido);
 
-                var pedidoCreado = insertPedido.Models.First();
+                var pedidoCreado = insertPedido.Models.FirstOrDefault();
+                if (pedidoCreado == null)
+                    return false;
+
                 long idPedido = pedidoCreado.IdPedido;
 
-                decimal total = 0;
-
-                // Insertar detalles
-                foreach (var item in items)
+                // 5?? Insertar detalles usando la lista preparada
+                foreach (var det in detallesAInsertar)
                 {
-                    var producto = await _client
-                        .From<Producto>()
-                        .Where(p => p.Id == item.idProducto)
-                        .Single();
-
-                    decimal subtotal = producto.Precio * item.cantidad;
-                    total += subtotal;
-
-                    var det = new DetallePedido
-                    {
-                        IdPedido = idPedido,
-                        IdProducto = item.idProducto,
-                        Cantidad = item.cantidad,
-                        Subtotal = subtotal
-                    };
-
+                    det.IdPedido = idPedido;
                     await _client.From<DetallePedido>().Insert(det);
                 }
-
-                // Actualizar total real
-                pedidoCreado.Total = total;
-
-                await _client
-                    .From<Pedido>()
-                    .Where(p => p.IdPedido == idPedido)
-                    .Update(pedidoCreado);
 
                 return true;
             }
@@ -196,6 +230,21 @@ namespace CoffeTime.Negocio.Servicios
                 throw new Exception("Error al crear pedido: " + ex.Message);
             }
         }
+        public async Task<bool> PagarPedidoRPC(long idPedido)
+        {
+            try
+            {
+                var resp = await _client.Rpc("pagar_pedido", new { p_id = idPedido });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("ERROR RPC: " + ex.Message);
+                return false;
+            }
+        }
+
+
 
     }
 }

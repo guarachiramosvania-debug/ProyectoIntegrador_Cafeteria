@@ -132,8 +132,13 @@ namespace CoffeTime.Presentacion.Views
                 if (ok)
                 {
                     MessageBox.Show("Pedido registrado correctamente.");
+
+                    // Muy importante: esto le avisa a la ventana que llamó ShowDialog()
+                    this.DialogResult = true;
+
                     this.Close();
                 }
+
                 else
                 {
                     MessageBox.Show("Error al registrar pedido.");
