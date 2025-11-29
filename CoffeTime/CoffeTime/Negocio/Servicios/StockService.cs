@@ -1,72 +1,53 @@
-using CoffeTime.Negocio.Modelos;
 using CoffeTime.Datos.Repositorios;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CoffeTime.Negocio.Servicios
+public class StockService
 {
-    public class StockService
+    private readonly DetallePedidoRepository _detalleRepo;
+    private readonly ProductoInsumoRepository _prodInsRepo;
+    private readonly InsumoRepository _insumoRepo;
+
+    public StockService()
     {
-        private readonly InsumoRepository _insumoRepo;
-        private readonly MovimientoInventarioRepository _movRepo;
-        private readonly ProductoInsumoRepository _prodInsumoRepo;
+        _detalleRepo = new DetallePedidoRepository();
+        _prodInsRepo = new ProductoInsumoRepository();
+        _insumoRepo = new InsumoRepository();
+    }
 
-        public StockService(InsumoRepository insumoRepo,
-                            MovimientoInventarioRepository movRepo,
-                            ProductoInsumoRepository prodInsumoRepo)
+    // =============================================================
+    //  DESCONTAR STOCK AL PAGAR PEDIDO
+    // =============================================================
+    public async Task DescontarStockDesdePedido(long idPedido)
+    {
+        // 1) Obtener detalles del pedido
+        var detalles = await _detalleRepo.ObtenerPorPedido(idPedido);
+        if (detalles == null || detalles.Count == 0)
+            return;
+
+        foreach (var det in detalles)
         {
-            _insumoRepo = insumoRepo;
-            _movRepo = movRepo;
-            _prodInsumoRepo = prodInsumoRepo;
-        }
+            // 2) Obtener insumos que usa este producto
+            var insumosProducto = await _prodInsRepo.ObtenerPorProducto((int)det.IdProducto);
 
-        // ===========================================================================
-        // ?? Validar stock suficiente
-        // ===========================================================================
-        public async Task<bool> HayStockParaProductoAsync(long idProducto)
-        {
-            var insumos = await _prodInsumoRepo.ObtenerPorProductoAsync(idProducto);
-
-            foreach (var pi in insumos)
+            foreach (var ip in insumosProducto)
             {
-                var insumo = await _insumoRepo.ObtenerPorId(pi.IdInsumo);
+                // 3) Obtener el insumo real
+                var insumo = await _insumoRepo.ObtenerPorIdAsync((int)ip.IdInsumo);
+                if (insumo == null)
+                    continue;
 
-                if (insumo == null) return false;
-                if (insumo.StockActual < pi.Cantidad) return false;
+                // 4) Calcular cantidad consumida
+                //    ip.Cantidad = cantidad necesaria por unidad de producto
+                decimal cantidadConsumida = ip.Cantidad * det.Cantidad;
+
+                insumo.StockActual -= cantidadConsumida;
+
+                if (insumo.StockActual < 0)
+                    insumo.StockActual = 0;
+
+                // 5) Guardar cambios
+                await _insumoRepo.ActualizarStock(insumo.IdInsumo, insumo.StockActual);
             }
-
-            return true;
-        }
-
-        // ===========================================================================
-        // ?? Descontar insumos tras una venta
-        // ===========================================================================
-        public async Task<bool> DescontarStockProductoAsync(long idProducto, long idUsuario)
-        {
-            var insumos = await _prodInsumoRepo.ObtenerPorProductoAsync(idProducto);
-
-            foreach (var pi in insumos)
-            {
-                var insumo = await _insumoRepo.ObtenerPorId(pi.IdInsumo);
-                if (insumo == null) return false;
-
-                var nuevoStock = insumo.StockActual - pi.Cantidad;
-
-                await _insumoRepo.ActualizarStock(insumo.IdInsumo, nuevoStock);
-
-                // registrar movimiento
-                await _movRepo.RegistrarMovimientoAsync(new MovimientoInventario
-                {
-                    IdInsumo = pi.IdInsumo,
-                    TipoMovimiento = "salida",
-                    Cantidad = pi.Cantidad,
-                    Fecha = DateTime.Now,
-                    UsuarioResponsable = idUsuario,
-                    CostoTotal = 0
-                });
-            }
-
-            return true;
         }
     }
 }

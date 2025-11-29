@@ -30,7 +30,9 @@ namespace CoffeTime.Negocio.Modelos
 
         // ⬇⬇⬇ CORREGIDO: permite NULL
         [Column("ultimo_login")]
-        public DateTime? UltimoLogin { get; set; }   // ← ACEPTA NULL
+        public DateTime? UltimoLogin { get; set; }
+
+        // ← ACEPTA NULL
 
 
         // ⬇⬇⬇ TAMBIÉN RECOMENDADO nullable

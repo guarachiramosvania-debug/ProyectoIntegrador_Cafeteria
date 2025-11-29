@@ -33,6 +33,11 @@ namespace CoffeTime.Presentacion.Views
 
             if (usuario != null)
             {
+                await repo.ActualizarUltimoLoginAsync(usuario.IdUsuario);
+                await repo.ActualizarOnlineAsync(usuario.IdUsuario, true);
+                App.Current.Properties["IdUsuario"] = (long)usuario.IdUsuario;
+
+                
                 App.Current.Properties["NombreUsuario"] = usuario.NombreUsuario;
                 App.Current.Properties["RolUsuario"] = usuario.Rol;
 

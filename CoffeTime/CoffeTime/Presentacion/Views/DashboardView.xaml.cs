@@ -17,7 +17,6 @@ namespace CoffeTime.Presentacion.Views
         public DashboardView()
         {
             InitializeComponent();
-            MantenerUsuarioOnline();
 
             // Asignar el ViewModel
             DataContext = new DashboardViewModel();
@@ -34,18 +33,13 @@ namespace CoffeTime.Presentacion.Views
         // Lógica de simulación de estado de usuario
         private async void MantenerUsuarioOnline()
         {
-            // Nota: Este bloque usa clases que deben estar definidas en tu proyecto 
-            // (UsuarioRepository y App.Current.Properties)
             if (App.Current.Properties["IdUsuario"] is long id)
             {
-                var usuario = await new UsuarioRepository().ObtenerPorIdAsync(id);
-
-                if (usuario != null)
-                {
-                    await new UsuarioRepository().ActualizarOnlineSoloAsync(usuario.IdUsuario, true);
-                }
+                await new UsuarioRepository().ActualizarOnlineSoloAsync(id, true);
             }
         }
+
+
 
         // 🎯 1. NAVEGACIÓN A PEDIDOS (Acceso Rápido y Nuevo Pedido Rápido)
         private void AbrirPedidosView()

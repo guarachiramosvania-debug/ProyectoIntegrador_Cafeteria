@@ -2,9 +2,9 @@ using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 using System;
 
-namespace CoffeTime.Negocio.Models
+namespace CoffeTime.Negocio.Modelos
 {
-    [Table("pedidos")] // tabla público.pedidos
+    [Table("pedidos")]
     public class Pedido : BaseModel
     {
         [PrimaryKey("id_pedido", false)]
@@ -17,10 +17,10 @@ namespace CoffeTime.Negocio.Models
         public DateTime Fecha { get; set; }
 
         [Column("estado")]
-        public string Estado { get; set; } = string.Empty;
+        public string Estado { get; set; }
 
         [Column("metodo_pago")]
-        public string MetodoPago { get; set; } = string.Empty;
+        public string MetodoPago { get; set; }
 
         [Column("total")]
         public decimal Total { get; set; }

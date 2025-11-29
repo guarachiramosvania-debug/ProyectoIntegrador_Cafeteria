@@ -13,46 +13,52 @@ namespace CoffeTime.Presentacion.Views
         private readonly UsuarioRepository usuarioRepo = new UsuarioRepository();
 
         private long? _idSeleccionado = null;
+
         protected override async void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             await ((App)Application.Current).CerrarSesionAutomatica();
             base.OnClosing(e);
         }
 
-
         public UsuariosView()
         {
             InitializeComponent();
-            MantenerUsuarioOnline();
             _service = new UsuarioService(new UsuarioRepository());
 
+            MantenerUsuarioOnline();  // ⭐ importante
             Loaded += UsuariosView_Loaded;
         }
+
+        // ============================================================
+        // MANTENER AL USUARIO ACTUAL COMO ONLINE (pero solo una vez)
+        // ============================================================
         private async void MantenerUsuarioOnline()
         {
             if (App.Current.Properties["IdUsuario"] is long id)
             {
-                var usuario = await usuarioRepo.ObtenerPorIdAsync(id);
-
-                if (usuario != null)
-                {
-                    usuario.Online = true;
-                    await usuarioRepo.ActualizarOnlineAsync(usuario.IdUsuario, true);
-                }
+                await usuarioRepo.ActualizarOnlineAsync(id, true);
             }
         }
 
-        // ============================
-        // CARGAR LISTA DE USUARIOS
-        // ============================
+        // ============================================================
+        // CARGAR LISTADO DE USUARIOS (FIX PARA ONLINE REAL)
+        // ============================================================
         private async void UsuariosView_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                var repo = new UsuarioRepository();
-                var service = new UsuarioService(repo);
+                var usuarios = await _service.ObtenerTodosAsync();
 
-                var usuarios = await service.ObtenerTodosAsync();
+                long idActual = (long)App.Current.Properties["IdUsuario"];
+
+                // ⭐ FORZAR ONLINE PARA EL USUARIO ACTUAL SIN ESPERAR A SUPABASE
+                foreach (var u in usuarios)
+                {
+                    if (u.IdUsuario == idActual)
+                    {
+                        u.Online = true;  // fuerza visual ✔
+                    }
+                }
 
                 var lista = usuarios.Select(u => new
                 {
@@ -61,18 +67,17 @@ namespace CoffeTime.Presentacion.Views
                     NombreCompleto = $"{u.Nombre} {u.Apellido}",
                     Rol = u.Rol,
 
-                    // ONLINE (campo nullable)
                     Estado = (u.Online ?? false) ? "🟢 Online" : "⚫ Offline",
 
-                    // ULTIMO LOGIN (campo DateTime? nullable)
                     UltimoLogin = u.UltimoLogin == null
-          ? "—"
-          : u.UltimoLogin.Value.ToString("dd/MM/yyyy HH:mm")
-
-                }).ToList();
+                                  ? "—"
+                                  : u.UltimoLogin.Value.ToString("dd/MM/yyyy HH:mm")
+                })
+                .OrderBy(u => u.Rol)      // opcional
+                .ThenBy(u => u.NombreUsuario)
+                .ToList();
 
                 DataGridUsuarios.ItemsSource = lista;
-
             }
             catch (Exception ex)
             {
@@ -80,29 +85,26 @@ namespace CoffeTime.Presentacion.Views
             }
         }
 
-
-
-        // ============================
+        // ============================================================
         // NUEVO USUARIO
-        // ============================
+        // ============================================================
         private void BtnNuevo_Click(object sender, RoutedEventArgs e)
         {
             UsuarioFormulario form = new UsuarioFormulario(null);
             form.ShowDialog();
-            UsuariosView_Loaded(null, null); // refrescar
+            UsuariosView_Loaded(null, null);
         }
 
-
-        // ============================
+        // ============================================================
         // EDITAR USUARIO
-        // ============================
+        // ============================================================
         private void BtnEditar_Click(object sender, RoutedEventArgs e)
         {
             if (sender is FrameworkElement fe && fe.Tag is long id)
             {
                 UsuarioFormulario form = new UsuarioFormulario(id);
                 form.ShowDialog();
-                UsuariosView_Loaded(null, null); // refrescar
+                UsuariosView_Loaded(null, null);
             }
             else
             {
@@ -110,12 +112,9 @@ namespace CoffeTime.Presentacion.Views
             }
         }
 
-
-
-
-        // ============================
+        // ============================================================
         // ELIMINAR USUARIO
-        // ============================
+        // ============================================================
         private async void BtnEliminar_Click(object sender, RoutedEventArgs e)
         {
             if (DataGridUsuarios.SelectedItem == null)

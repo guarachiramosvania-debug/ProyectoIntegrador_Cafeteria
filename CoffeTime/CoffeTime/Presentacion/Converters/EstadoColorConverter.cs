@@ -15,6 +15,13 @@ namespace CoffeTime.Presentacion.Converters
                 return new SolidColorBrush(Color.FromRgb(0xFF, 0xD8, 0xD8)); // rojo suave
 
             return new SolidColorBrush(Color.FromRgb(0xE2, 0xF5, 0xE9)); // verde suave
+
+
+
+
+
+
+
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

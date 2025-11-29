@@ -103,47 +103,54 @@ namespace CoffeTime.Datos.Repositorios
         {
             try
             {
-                // 1?? obtener el usuario completo
-                var user = await ObtenerPorIdAsync(idUsuario);
-                if (user == null)
-                    return false;
-
-                // 2?? modificar solo online
-                user.Online = online;
-
-                // 3?? actualizar enviando TODO el modelo
                 var response = await _client
-                    .From<UsuarioModel>()
+                    .From<Usuario>()
                     .Where(u => u.IdUsuario == idUsuario)
-                    .Update(user);
-
-                return response.Models.Count > 0;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("ERROR UPDATE ONLINE: " + ex.Message);
-                return false;
-            }
-        }
-
-        public async Task<bool> ActualizarOnlineSoloAsync(long idUsuario, bool online)
-        {
-            try
-            {
-                var response = await _client
-                    .From<UsuarioModel>()
-                    .Where(u => u.IdUsuario == idUsuario)
-                    .Set(x => x.Online, online)   // ? ESTA ES LA CLAVE
+                    .Set(x => x.Online, online)
                     .Update();
 
                 return response.Models.Count > 0;
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show("ERROR UPDATE ONLINE: " + ex.Message);
                 return false;
             }
         }
+
+
+
+        public async Task<bool> ActualizarUltimoLoginAsync(long idUsuario)
+        {
+            try
+            {
+                var response = await _client
+                    .From<Usuario>()
+                    .Where(u => u.IdUsuario == idUsuario)
+                    .Set(x => x.UltimoLogin, DateTime.Now)
+                    .Update();
+
+                return response.Models.Count > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+
+        public async Task<bool> ActualizarOnlineSoloAsync(long idUsuario, bool online)
+        {
+            var response = await _client
+                .From<Usuario>()
+                .Where(u => u.IdUsuario == idUsuario)
+                .Set(x => x.Online, online)
+                .Update();
+
+            return response.Models.Count > 0;
+        }
+
+
 
 
 

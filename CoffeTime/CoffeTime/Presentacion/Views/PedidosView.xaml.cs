@@ -19,9 +19,6 @@ namespace CoffeTime.Presentacion.Views
             try
             {
                 var lista = await _service.ObtenerPedidosAsync();
-
-                MessageBox.Show($"Pedidos recibidos: {lista.Count}");
-
                 icListaPedidos.ItemsSource = lista;
             }
             catch (Exception ex)
@@ -30,17 +27,39 @@ namespace CoffeTime.Presentacion.Views
             }
         }
 
-        private void BtnNuevoPedido_Click(object sender, RoutedEventArgs e)
+        private async void BtnPagarPedido_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Crear pedido aún no implementado.");
+            if (sender is FrameworkElement fe && fe.Tag is long id)
+            {
+                try
+                {
+                    await _service.MarcarComoPagado(id);
+                    MessageBox.Show("Pedido PAGADO correctamente.");
+                    PedidosView_Loaded(null, null);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al pagar pedido: " + ex.Message);
+                }
+            }
         }
 
         private async void BtnCancelarPedido_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is FrameworkElement fe &&
-                fe.Tag is long id)
+            if (sender is FrameworkElement fe && fe.Tag is long id)
             {
                 await _service.CancelarPedidoAsync(id);
+                PedidosView_Loaded(null, null);
+            }
+        }
+
+        private void BtnNuevoPedido_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new NuevoPedidoView();
+            bool? result = win.ShowDialog();
+
+            if (result == true)
+            {
                 PedidosView_Loaded(null, null);
             }
         }

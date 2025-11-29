@@ -59,4 +59,14 @@ public class InsumoRepository
             return false;
         }
     }
+    public async Task<Insumo?> ObtenerPorIdAsync(int id)
+    {
+        var resp = await _client
+            .From<Insumo>()
+            .Where(x => x.IdInsumo == id)
+            .Single();
+
+        return resp;
+    }
+
 }
