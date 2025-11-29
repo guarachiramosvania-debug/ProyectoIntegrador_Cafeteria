@@ -133,13 +133,23 @@ namespace CoffeTime.Presentacion.Views
         {
             try
             {
+                // Obtener datos actuales del producto
+                var original = await _repo.GetById(_idEditando);
+                if (original == null)
+                {
+                    MessageBox.Show("Error: producto no encontrado.");
+                    return;
+                }
+
+                // Crear objeto actualizado conservando la imagen
                 var p = new Producto
                 {
                     Id = _idEditando,
                     Nombre = TxtNombreEdit.Text,
                     Categoria = TxtCategoriaEdit.Text,
                     Precio = decimal.Parse(TxtPrecioEdit.Text),
-                    Descripcion = TxtDescripcionEdit.Text
+                    Descripcion = TxtDescripcionEdit.Text,
+                    ImagenUrl = original.ImagenUrl   // ✔ conservar
                 };
 
                 await _repo.Update(p);
@@ -152,6 +162,7 @@ namespace CoffeTime.Presentacion.Views
                 MessageBox.Show("ERROR al guardar cambios: " + ex.Message);
             }
         }
+
 
         // ======================================================
         //   CERRAR MODAL
