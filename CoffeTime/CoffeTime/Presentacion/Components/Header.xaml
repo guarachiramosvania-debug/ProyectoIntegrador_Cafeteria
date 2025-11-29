@@ -10,49 +10,93 @@
 
         <Grid Margin="20,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="180"/>
+                <ColumnDefinition Width="220"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
 
             <!-- LOGO -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Image Source="/Presentacion/Resources/logo.png" Width="45" Height="45" Margin="0,0,10,0"/>
+                <Image Source="/Presentacion/Resources/logo.png"
+                       Width="45"
+                       Height="45"
+                       Margin="0,0,10,0"/>
+
                 <StackPanel>
-                    <TextBlock Text="CoffeeTime" FontWeight="Bold" FontSize="16" Foreground="#8B5E34"/>
-                    <TextBlock Text="Sistema de Gestión" FontSize="11" Foreground="Gray"/>
+                    <TextBlock Text="CoffeeTime"
+                               FontWeight="Bold"
+                               FontSize="16"
+                               Foreground="#8B5E34"/>
+                    <TextBlock Text="Sistema de Gestión"
+                               FontSize="11"
+                               Foreground="Gray"/>
                 </StackPanel>
             </StackPanel>
 
-            <!-- MENÚ PRINCsIPAL -->
+            <!-- MENÚ -->
             <StackPanel Grid.Column="1" Orientation="Horizontal"
                         VerticalAlignment="Center" HorizontalAlignment="Center">
 
-                <Button Content="🏠 Dashboard"  Tag="Dashboard"   Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
-                <Button Content="👥 Usuarios"    Tag="Usuarios"    Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
-                <Button Content="🍪 Productos"   Tag="Productos"   Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
-                <Button Content="🛒 Pedidos"     Tag="Pedidos"     Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
-                <Button Content="📦 Inventario"  Tag="Inventario"  Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
-                <Button Content="🤝 Proveedores" Tag="Proveedores" Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
-                <Button Content="📊 Reportes"    Tag="Reportes"    Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
+                <Button Content="🏠 Dashboard"  Tag="Dashboard"
+                        Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
+                <Button Content="👥 Usuarios"    Tag="Usuarios"
+                        Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
+                <Button Content="🍪 Productos"   Tag="Productos"
+                        Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
+                <Button Content="🛒 Pedidos"     Tag="Pedidos"
+                        Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
+                <Button Content="📦 Inventario"  Tag="Inventario"
+                        Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
+                <Button Content="🤝 Proveedores" Tag="Proveedores"
+                        Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
+                <Button Content="📊 Reportes"    Tag="Reportes"
+                        Style="{StaticResource MenuButtonStyle}" Click="MenuClick"/>
             </StackPanel>
 
-            <!-- PERFIL + LOGOUT -->
-            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <!-- PERFIL + HORA + LOGOUT -->
+            <StackPanel Grid.Column="2"
+            Orientation="Horizontal"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Right">
 
-                <StackPanel Margin="0,0,10,0">
-                    <TextBlock x:Name="TxtNombre" Text="Usuario" FontWeight="Bold" HorizontalAlignment="Right"/>
-                    <TextBlock x:Name="TxtRol" Text="Rol" FontSize="11" Foreground="Gray" HorizontalAlignment="Right"/>
+                <!-- HORA -->
+                <TextBlock x:Name="TxtHora"
+               FontSize="14"
+               Foreground="#6B4F2A"
+               VerticalAlignment="Center"
+               Margin="0 0 15 0"/>
+
+                <!-- ICONO + USUARIO -->
+                <StackPanel Orientation="Horizontal"
+                VerticalAlignment="Center"
+                Margin="0 0 15 0">
+
+                    <TextBlock Text="👤"
+                   FontSize="20"
+                   Margin="0,0,5,0"
+                   VerticalAlignment="Center"/>
+
+                    <StackPanel>
+                        <TextBlock x:Name="TxtNombre"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Right"/>
+                        <TextBlock x:Name="TxtRol"
+                       FontSize="11"
+                       Foreground="Gray"
+                       HorizontalAlignment="Right"/>
+                    </StackPanel>
                 </StackPanel>
 
+                <!-- LOGOUT -->
                 <Button Content="🔓 Salir"
-                        Background="#E53935"
-                        Foreground="White"
-                        BorderThickness="0"
-                        Padding="10 4"
-                        Click="LogoutClick"
-                        Cursor="Hand"/>
+            Background="#E53935"
+            Foreground="White"
+            BorderThickness="0"
+            Padding="10 4"
+            Click="LogoutClick"
+            Cursor="Hand"/>
             </StackPanel>
+
 
         </Grid>
     </Border>
