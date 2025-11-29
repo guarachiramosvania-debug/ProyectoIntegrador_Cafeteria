@@ -17,5 +17,11 @@ namespace CoffeTime.Negocio.Modelos
 
         [Column("precio")]
         public decimal Precio { get; set; }
+
+        [Column("descripcion")]
+        public string Descripcion { get; set; }
+
+        [Column("imagen_url")]
+        public string ImagenUrl { get; set; }
     }
 }

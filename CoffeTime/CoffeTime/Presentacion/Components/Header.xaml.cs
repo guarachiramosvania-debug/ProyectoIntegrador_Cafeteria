@@ -16,7 +16,7 @@ namespace CoffeTime.Presentacion.Components
             if (App.Current.Properties["RolUsuario"] != null)
                 TxtRol.Text = App.Current.Properties["RolUsuario"].ToString();
         }
-
+        //esto es un comentario
         // NAVEGACIÓN SIN CERRAR SESIÓN
         private void MenuClick(object sender, RoutedEventArgs e)
         {

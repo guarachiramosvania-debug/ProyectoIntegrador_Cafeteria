@@ -39,6 +39,15 @@
         <Setter Property="Foreground" Value="{StaticResource TextLightBrush}"/>
     </Style>
 
+    <Style x:Key="CardPOS" TargetType="Border">
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="#EDE8D8"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="Margin" Value="10"/>
+    </Style>
+
 
     <!-- ============================
          BOTONES PRINCIPALES

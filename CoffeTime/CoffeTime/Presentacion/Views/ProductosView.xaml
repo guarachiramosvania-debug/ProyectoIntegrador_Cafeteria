@@ -1,102 +1,153 @@
 ﻿<Window x:Class="CoffeTime.Presentacion.Views.ProductosView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:components="clr-namespace:CoffeTime.Presentacion.Components"
-        mc:Ignorable="d"
         Title="Gestión de Productos"
         Height="900" Width="1400"
-        MinHeight="700" MinWidth="1000"
-        WindowStartupLocation="CenterScreen"
-        Background="#FFF8F4E9">
-
-    <Window.Resources>
-        <ResourceDictionary Source="/CoffeTime;component/Presentacion/Resources/Styles.xaml"/>
-    </Window.Resources>
+        Background="#FFF8F4E9"
+        WindowStartupLocation="CenterScreen">
 
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!-- HEADER -->
         <components:Header Grid.Row="0"/>
 
+        <!-- CONTENIDO -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="40">
+            <StackPanel Margin="30">
 
+                <!-- Título + botón nuevo -->
                 <DockPanel Margin="0,0,0,20">
                     <Button Content="+ Nuevo Producto"
-                            DockPanel.Dock="Right"
                             Style="{StaticResource MainButton}"
-                            Padding="20,10"
+                            DockPanel.Dock="Right"
+                            Padding="18,8"
                             Click="BtnNuevoProducto"/>
 
                     <StackPanel>
                         <TextBlock Text="Gestión de Productos"
-                                   Style="{StaticResource TitleText}"/>
+                                   FontSize="26"
+                                   FontWeight="Bold"
+                                   Foreground="#4A2E0F"/>
                         <TextBlock Text="Administra el catálogo de productos"
-                                   Style="{StaticResource SubtitleText}"/>
+                                   Foreground="#7A6A58"/>
                     </StackPanel>
                 </DockPanel>
 
-                <ItemsControl x:Name="listaProductos">
+                <!-- 🔍 BUSCADOR + FILTROS -->
+                <Border Background="White"
+                        CornerRadius="8"
+                        Padding="10"
+                        BorderBrush="#D6C7B4"
+                        BorderThickness="1"
+                        Margin="0,0,0,15">
 
+                    <StackPanel Orientation="Horizontal" Margin="10">
+
+                        <!-- BUSCADOR con placeholder -->
+                        <Grid Width="220" Margin="0,0,10,0">
+                            <TextBox x:Name="TxtBuscar"
+                                     Height="32"
+                                     TextChanged="TxtBuscar_TextChanged"/>
+
+                            <!-- Placeholder REAL -->
+                            <TextBlock x:Name="TxtBuscarPlaceholder"
+                                       Text="Buscar..."
+                                       Foreground="#999"
+                                       Margin="8,0,0,0"
+                                       VerticalAlignment="Center"
+                                       IsHitTestVisible="False"/>
+                        </Grid>
+
+                        <!-- CATEGORÍAS -->
+                        <ComboBox x:Name="CmbCategorias"
+                                  Width="180"
+                                  Height="32"
+                                  SelectionChanged="FiltrarProductos"/>
+                    </StackPanel>
+
+                </Border>
+
+                <!-- GRID de productos -->
+                <ItemsControl x:Name="ListaProductos">
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True"
+                                       Orientation="Horizontal"
+                                       ItemWidth="280"
+                                       ItemHeight="Auto"
+                                       Margin="10"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <!-- TARJETA -->
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
 
-                            <Border Style="{StaticResource CardStyle}"
-                                    Padding="15" Margin="8,0,8,10">
+                            <Border CornerRadius="12"
+                                    Background="White"
+                                    Margin="10"
+                                    Padding="12"
+                                    BorderBrush="#E2DCC8"
+                                    BorderThickness="1"
+                                    Width="260">
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
+                                <StackPanel>
 
-                                    <Rectangle Width="50" Height="50"
-                                               Fill="#EAEAEA"
-                                               RadiusX="5" RadiusY="5"
-                                               Margin="0,0,15,0"/>
+                                    <!-- IMAGEN + INFO -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <Image Source="{Binding ImagenUrl}"
+                                               Width="60" Height="60"
+                                               Margin="0,0,10,0"/>
 
-                                    <StackPanel Grid.Column="1">
-                                        <TextBlock Text="{Binding Nombre}"
-                                                   FontSize="16"
-                                                   FontWeight="SemiBold"
-                                                   Foreground="{StaticResource TextDarkBrush}"/>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Nombre}"
+                                                       FontSize="16"
+                                                       FontWeight="Bold"/>
 
-                                        <TextBlock Text="{Binding Categoria}"
-                                                   Foreground="{StaticResource TextLightBrush}"/>
+                                            <TextBlock Text="{Binding Categoria}"
+                                                       Foreground="#777"/>
+
+                                            <TextBlock Text="{Binding Precio, StringFormat='${0:F2}'}"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       Margin="0,4,0,0"/>
+                                        </StackPanel>
                                     </StackPanel>
 
-                                    <TextBlock Grid.Column="2"
-                                               Text="{Binding Precio, StringFormat='${0:F2}'}"
-                                               FontSize="16"
-                                               FontWeight="SemiBold"
-                                               VerticalAlignment="Center"
-                                               Margin="15,0"/>
+                                    <!-- EXPANDER -->
+                                    <Expander Header="Ver más">
+                                        <StackPanel Margin="0,10,0,0">
 
-                                    <StackPanel Grid.Column="3"
-                                                VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Descripcion}"
+                                                       TextWrapping="Wrap"
+                                                       Foreground="#444"/>
 
-                                        <Button Content="✏ Editar"
-                                                Tag="{Binding Id}"
-                                                Background="#FDECC2"
-                                                BorderBrush="#C9A96D"
-                                                Margin="0,0,0,5"
-                                                Click="EditarProducto"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                                <Button Content="✏ Editar"
+                                                        Tag="{Binding Id}"
+                                                        Width="80"
+                                                        Margin="0,0,10,0"
+                                                        Click="EditarProducto"/>
 
-                                        <Button Content="🗑 Eliminar"
-                                                Tag="{Binding Id}"
-                                                Background="#F8C4C4"
-                                                BorderBrush="#DB6E6E"
-                                                Click="EliminarProducto"/>
-                                    </StackPanel>
+                                                <Button Content="🗑 Eliminar"
+                                                        Tag="{Binding Id}"
+                                                        Width="80"
+                                                        Background="#F8C4C4"
+                                                        BorderBrush="#D77"
+                                                        Click="EliminarProducto"/>
+                                            </StackPanel>
 
-                                </Grid>
+                                        </StackPanel>
+                                    </Expander>
+
+                                </StackPanel>
 
                             </Border>
 
@@ -107,6 +158,45 @@
 
             </StackPanel>
         </ScrollViewer>
+
+        <!-- MODAL DE EDICIÓN -->
+        <Border x:Name="ModalFondo"
+                Background="#AA000000"
+                Visibility="Collapsed"
+                Grid.RowSpan="2">
+
+            <Border Width="450"
+                    Background="White"
+                    Padding="20"
+                    CornerRadius="12"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+
+                <StackPanel>
+
+                    <TextBlock Text="Editar Producto"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Margin="0,0,0,20"/>
+
+                    <!-- Inputs SIN placeholder -->
+                    <TextBox x:Name="TxtNombreEdit" Margin="0,0,0,10"/>
+                    <TextBox x:Name="TxtCategoriaEdit" Margin="0,0,0,10"/>
+                    <TextBox x:Name="TxtPrecioEdit" Margin="0,0,0,10"/>
+                    <TextBox x:Name="TxtDescripcionEdit" Margin="0,0,0,10"/>
+
+                    <Button Content="Guardar"
+                            Margin="0,10,0,0"
+                            Click="GuardarEdicion"/>
+
+                    <Button Content="Cancelar"
+                            Background="#F8C4C4"
+                            Margin="0,10,0,0"
+                            Click="CerrarModal"/>
+                </StackPanel>
+
+            </Border>
+        </Border>
 
     </Grid>
 </Window>

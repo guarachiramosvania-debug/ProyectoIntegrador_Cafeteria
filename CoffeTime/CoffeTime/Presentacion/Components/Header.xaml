@@ -24,7 +24,7 @@
                 </StackPanel>
             </StackPanel>
 
-            <!-- MENÚ PRINCIPAL -->
+            <!-- MENÚ PRINCsIPAL -->
             <StackPanel Grid.Column="1" Orientation="Horizontal"
                         VerticalAlignment="Center" HorizontalAlignment="Center">
 
