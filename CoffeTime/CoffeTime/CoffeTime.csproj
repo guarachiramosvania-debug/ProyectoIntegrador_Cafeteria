@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Presentacion\Assets\Productos\candado.jpg" />
+    <None Remove="Presentacion\Assets\Productos\contrasena.png" />
     <None Remove="Presentacion\Resources\logo.png" />
   </ItemGroup>
 
@@ -27,6 +29,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Presentacion\Assets\Productos\candado.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Presentacion\Assets\Productos\contrasena.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Presentacion\Resources\Colors.xaml" />
     <Resource Include="Presentacion\Resources\logo.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

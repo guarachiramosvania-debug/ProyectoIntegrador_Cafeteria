@@ -91,7 +91,7 @@
                             <ColumnDefinition Width="34*"/>
                             <ColumnDefinition Width="269*"/>
                         </Grid.ColumnDefinitions>
-                        <Image Source="/Presentacion/Assets/Productos/png-clipart-padlock-logo-computer-icons-padlock-technic-logo.png" />
+                        <Image Source="/Presentacion\Assets\Productos\candado.jpg" />
 
 
                         <PasswordBox x:Name="PasswordPasswordBox"
@@ -147,8 +147,7 @@
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
-
-                    Iniciar Sesión
+Iniciar Sesion
                 </Button>
 
             </StackPanel>
