@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
 
         <comp:Header Grid.Row="0"/>
-        <Image Source="/Presentacion/Resources/logo.png" Width="45" Height="45" Margin="10,18,1045,18"/>
+      
 
         <ScrollViewer Grid.Row="1" Padding="40" VerticalScrollBarVisibility="Auto">
             <StackPanel>

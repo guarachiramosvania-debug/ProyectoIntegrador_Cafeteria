@@ -18,7 +18,7 @@
         <components:Header Grid.Row="0"/>
 
 
-        <Image Source="/Presentacion/Resources/logo.png" Width="45" Height="45" Margin="10,10,1045,25"/>
+      
 
 
         <ScrollViewer Grid.Row="1">
