@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
 
         <comp:Header Grid.Row="0"/>
-      
+        <Image Source="/Presentacion/Resources/logo.png" Width="45" Height="45" Margin="10,18,1045,18"/>
 
         <ScrollViewer Grid.Row="1" Padding="40" VerticalScrollBarVisibility="Auto">
             <StackPanel>
@@ -106,7 +106,8 @@
                             Foreground="White"
                             Padding="10"
                             Margin="20,0,0,0"
-                            Click="btnNuevoPedidoRapido_Click"  Command="{Binding NewQuickOrderCommand}">
+                            Click="btnNuevoPedidoRapido_Click"
+                            Command="{Binding NewQuickOrderCommand}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="➕" Margin="0,0,10,0"/>
                             <TextBlock Text="Nuevo Pedido Rápido" FontWeight="Bold"/>
