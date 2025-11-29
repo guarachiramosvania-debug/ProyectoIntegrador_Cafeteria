@@ -6,6 +6,7 @@ using Supabase;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace CoffeTime.Negocio.Servicios
 {
@@ -23,39 +24,43 @@ namespace CoffeTime.Negocio.Servicios
         // ====================================================
         public async Task<List<PedidoDTO>> ObtenerPedidosAsync()
         {
-            var pedidos = await _client.From<Pedido>().Get();
+            // 1?? Cargar TODO de golpe (solo 3 queries)
+            var pedidosResp = await _client.From<Pedido>().Get();
+            var detallesResp = await _client.From<DetallePedido>().Get();
+            var productosResp = await _client.From<Producto>().Get();
+
+            var pedidos = pedidosResp.Models;
+            var detalles = detallesResp.Models;
+            var productos = productosResp.Models.ToDictionary(p => p.Id);
 
             List<PedidoDTO> lista = new();
 
-            foreach (var p in pedidos.Models)
+            foreach (var p in pedidos.OrderByDescending(x => x.IdPedido))
             {
-                var detalles = await _client
-                    .From<DetallePedido>()
-                    .Where(d => d.IdPedido == p.IdPedido)
-                    .Get();
+                // Obtener detalles del pedido (filtrado en memoria = instantáneo)
+                var dets = detalles.Where(d => d.IdPedido == p.IdPedido).ToList();
 
-                // Obtener nombres
-                foreach (var d in detalles.Models)
+                // Construir lista de productos “2 x Café Latte”
+                var productosTexto = new List<string>();
+
+                foreach (var d in dets)
                 {
-                    var prod = await _client
-                        .From<Producto>()
-                        .Where(x => x.Id == d.IdProducto)
-                        .Single();
+                    if (productos.TryGetValue((int)d.IdProducto, out var prod))
+                    {
+                        productosTexto.Add($"{d.Cantidad} x {prod.Nombre}");
+                    }
 
-                    d.NombreProducto = prod.Nombre;
                 }
 
                 lista.Add(new PedidoDTO
                 {
                     IdPedido = p.IdPedido,
-                    NombrePedido = $"Pedido #{p.IdPedido}",
+                    NombrePedido = $"Pedido #{p.NumeroPedido}",
                     Fecha = p.Fecha,
                     Estado = p.Estado,
                     MetodoPago = p.MetodoPago,
                     Total = p.Total,
-                    Productos = detalles.Models
-                        .Select(d => $"{d.NombreProducto} x{d.Cantidad}")
-                        .ToList()
+                    Productos = productosTexto
                 });
             }
 
