@@ -94,6 +94,13 @@ namespace CoffeTime.Presentacion.Views
         // ======================================================
         private void BtnNuevoProducto(object sender, RoutedEventArgs e)
         {
+
+            if (!PermisosService.EsAdmin())
+            {
+                MessageBox.Show("No tienes permisos para acceder a esta sección.");
+                this.Tag = "DENIED"; // marcar que NO debe abrirse
+                return;
+            }
             var win = new NuevoProductoView();
             win.ShowDialog();
             CargarProductos(); // refresca lista
@@ -105,6 +112,13 @@ namespace CoffeTime.Presentacion.Views
         // ======================================================
         private async void EditarProducto(object sender, RoutedEventArgs e)
         {
+
+            if (!PermisosService.EsAdmin())
+            {
+                MessageBox.Show("No tienes permisos para acceder a esta sección.");
+                this.Tag = "DENIED"; // marcar que NO debe abrirse
+                return;
+            }
             try
             {
                 _idEditando = int.Parse((sender as FrameworkElement).Tag.ToString());
@@ -181,6 +195,12 @@ namespace CoffeTime.Presentacion.Views
         // ======================================================
         private async void EliminarProducto(object sender, RoutedEventArgs e)
         {
+            if (!PermisosService.EsAdmin())
+            {
+                MessageBox.Show("No tienes permisos para acceder a esta sección.");
+                this.Tag = "DENIED"; // marcar que NO debe abrirse
+                return;
+            }
             try
             {
                 int id = int.Parse((sender as FrameworkElement).Tag.ToString());

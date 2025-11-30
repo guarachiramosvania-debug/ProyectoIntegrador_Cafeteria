@@ -49,8 +49,19 @@ namespace CoffeTime.Presentacion.Components
                 case "Reportes": nuevaVentana = new ReportesView(); break;
             }
 
-            nuevaVentana?.Show();
-            Window.GetWindow(this)?.Close();
+            if (nuevaVentana != null)
+            {
+                // Si la ventana marcó que no tiene permisos, NO continuar
+                if (nuevaVentana.Tag?.ToString() == "DENIED")
+                {
+                    nuevaVentana = null;  // evitar Show()
+                    return;               // no cerrar la ventana actual
+                }
+
+                nuevaVentana.Show();
+                Window.GetWindow(this)?.Close();
+            }
+
         }
 
         // Logout

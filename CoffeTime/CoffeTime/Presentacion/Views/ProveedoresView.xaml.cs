@@ -41,6 +41,12 @@ namespace CoffeTime.Presentacion.Views
 
         private async void EliminarProveedor(object sender, RoutedEventArgs e)
         {
+            if (!PermisosService.EsAdmin())
+            {
+                MessageBox.Show("No tienes permisos para acceder a esta sección.");
+                this.Tag = "DENIED"; // marcar que NO debe abrirse
+                return;
+            }
             int id = int.Parse((sender as FrameworkElement).Tag.ToString());
 
             if (MessageBox.Show("¿Deseas eliminar este proveedor?",
@@ -55,6 +61,12 @@ namespace CoffeTime.Presentacion.Views
 
         private void EditarProveedor(object sender, RoutedEventArgs e)
         {
+            if (!PermisosService.EsAdmin())
+            {
+                MessageBox.Show("No tienes permisos para acceder a esta sección.");
+                this.Tag = "DENIED"; // marcar que NO debe abrirse
+                return;
+            }
             int id = int.Parse((sender as FrameworkElement).Tag.ToString());
             var ventana = new ProveedorFormulario(id);
             ventana.ShowDialog();
@@ -70,6 +82,12 @@ namespace CoffeTime.Presentacion.Views
 
         private void BtnNuevoProveedor_Click(object sender, RoutedEventArgs e)
         {
+            if (!PermisosService.EsAdmin())
+            {
+                MessageBox.Show("No tienes permisos para acceder a esta sección.");
+                this.Tag = "DENIED"; // marcar que NO debe abrirse
+                return;
+            }
             var ventana = new ProveedorFormulario(null); // null = nuevo proveedor
             if (ventana.ShowDialog() == true)
                 CargarProveedores(); // refresca la lista

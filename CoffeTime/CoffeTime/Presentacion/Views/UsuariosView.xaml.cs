@@ -23,6 +23,12 @@ namespace CoffeTime.Presentacion.Views
         public UsuariosView()
         {
             InitializeComponent();
+            if (!PermisosService.EsAdmin())
+            {
+                MessageBox.Show("No tienes permisos para acceder a esta sección.");
+                this.Tag = "DENIED"; // marcar que NO debe abrirse
+                return;
+            }
             _service = new UsuarioService(new UsuarioRepository());
 
             MantenerUsuarioOnline();  // ⭐ importante

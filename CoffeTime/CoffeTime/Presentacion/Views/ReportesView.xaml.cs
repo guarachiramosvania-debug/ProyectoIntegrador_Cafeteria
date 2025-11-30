@@ -26,6 +26,12 @@ namespace CoffeTime.Presentacion.Views
         public ReportesView()
         {
             InitializeComponent();
+            if (!PermisosService.EsAdmin())
+            {
+                MessageBox.Show("No tienes permisos para acceder a esta sección.");
+                this.Tag = "DENIED"; // marcar que NO debe abrirse
+                return;
+            }
 
             // Enlazar eventos (si no están ya enlazados en el XAML)
             btnExportarReporte.Click += BtnExportarReporte_Click;
