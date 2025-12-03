@@ -42,7 +42,7 @@ namespace CoffeTime.Presentacion.Views
 
             // Inicializar el año para el reporte mensual
             txtAnioReportes.Text = DateTime.Today.Year.ToString();
-
+            
             // Enlazar eventos (si no están ya enlazados en el XAML)
             btnExportarReporte.Click += BtnExportarReporte_Click;
             btnCargarVentasMensuales.Click += BtnCargarVentasMensuales_Click;
