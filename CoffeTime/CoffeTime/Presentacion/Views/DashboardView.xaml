@@ -16,7 +16,7 @@ MinHeight="750"
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <components:Header Grid.Row="0"/>
+        <comp:Header Grid.Row="0"/>
 
         <ScrollViewer Grid.Row="1" Padding="40" VerticalScrollBarVisibility="Auto">
             <StackPanel>
