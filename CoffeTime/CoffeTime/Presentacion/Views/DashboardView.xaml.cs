@@ -10,13 +10,10 @@ using System.Threading.Tasks;
 using CoffeTime.Datos.Conexion;
 using Supabase;
 using CoffeTime.Datos.Repositorios;
-// Asegúrate de que las siguientes vistas existen o ajústalas a tu proyecto
 using CoffeTime.Presentacion.Views;
-// Se asume que tienes PedidosView, InventarioView y NuevoPedidoView
 
 namespace CoffeTime.Presentacion.Views
 {
-  
     public partial class DashboardView : Window
     {
         public DashboardView()
@@ -26,11 +23,11 @@ namespace CoffeTime.Presentacion.Views
 
             var vm = (DashboardViewModel)DataContext;
 
-            // Ejecutar el comando de carga de datos al iniciar
             if (vm.LoadDashboardDataCommand.CanExecute(null))
             {
                 vm.LoadDashboardDataCommand.Execute(null);
             }
+
             MantenerUsuarioOnline();
         }
 
@@ -38,40 +35,37 @@ namespace CoffeTime.Presentacion.Views
         {
             if (Application.Current.Properties["IdUsuario"] is long id)
             {
-                // ** Asegúrate de que UsuarioRepository existe **
                 await new UsuarioRepository().ActualizarOnlineSoloAsync(id, true);
             }
         }
 
-        // 🎯 1a. NAVEGACIÓN A PEDIDOS (Acceso Rápido)
         private void AbrirPedidosView()
         {
             try
             {
-                // Abre la ventana principal de Pedidos
                 PedidosView pedidosWindow = new PedidosView();
                 pedidosWindow.Show();
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al abrir la ventana de Pedidos: " + ex.Message, "Error de Navegación", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error al abrir la ventana de Pedidos: " + ex.Message,
+                    "Error de Navegación", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        // 🎯 1b. NAVEGACIÓN A NUEVO PEDIDO
         private void AbrirNuevoPedidoView()
         {
             try
             {
-                // Abre la ventana de Nuevo Pedido 
                 NuevoPedidoView nuevoPedidoWindow = new NuevoPedidoView();
                 nuevoPedidoWindow.Show();
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al abrir la ventana de Nuevo Pedido: " + ex.Message, "Error de Navegación", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error al abrir la ventana de Nuevo Pedido: " + ex.Message,
+                    "Error de Navegación", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -80,34 +74,27 @@ namespace CoffeTime.Presentacion.Views
             AbrirPedidosView();
         }
 
-        // 🚨 MODIFICADO: Ahora abre la vista NuevoPedidoView
         private void btnNuevoPedidoRapido_Click(object sender, RoutedEventArgs e)
         {
             AbrirNuevoPedidoView();
         }
 
-
-        // 🎯 2. NAVEGACIÓN A INVENTARIO (Acceso Rápido)
         private void btnAccesoInventario_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Asumiendo que tienes una ventana llamada InventarioView
                 InventarioView inventarioWindow = new InventarioView();
                 inventarioWindow.Show();
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al abrir la ventana de Inventario: " + ex.Message, "Error de Navegación", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error al abrir la ventana de Inventario: " + ex.Message,
+                    "Error de Navegación", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
 
-
-    // =========================================================
-    // BASE DE VIEWMODEL
-    // =========================================================
     public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -118,18 +105,10 @@ namespace CoffeTime.Presentacion.Views
         }
     }
 
-
-    // =========================================================
-    // VIEWMODEL DEL DASHBOARD
-    // =========================================================
     public class DashboardViewModel : ViewModelBase
     {
-
-        // Conexión directa a Supabase
         private readonly Supabase.Client _client = SupabaseContext.Client;
 
-
-        // Propiedades de Datos (Dashboard Cards)
         private decimal _ventasDelDia;
         public decimal VentasDelDia
         {
@@ -151,7 +130,6 @@ namespace CoffeTime.Presentacion.Views
             set { _alertasDeStock = value; OnPropertyChanged(); }
         }
 
-
         public ICommand LoadDashboardDataCommand { get; private set; }
         public ICommand NewQuickOrderCommand { get; private set; }
         public ICommand NavigateToOrdersCommand { get; private set; }
@@ -160,64 +138,52 @@ namespace CoffeTime.Presentacion.Views
         public DashboardViewModel()
         {
             LoadDashboardDataCommand = new RelayCommand(ExecuteLoadDashboardData);
-
-            // Comandos de navegación se mantienen enlazados aunque la lógica esté en el Code-Behind
-            NavigateToOrdersCommand = new RelayCommand(p => { /* Lógica en Code-Behind */ });
-            // NewQuickOrderCommand enlaza al botón que tiene el click event en el Code-Behind
-            NewQuickOrderCommand = new RelayCommand(p => { /* Lógica en Code-Behind */ });
-            NavigateToInventoryCommand = new RelayCommand(p => { /* Lógica en Code-Behind */ });
+            NavigateToOrdersCommand = new RelayCommand(p => { });
+            NewQuickOrderCommand = new RelayCommand(p => { });
+            NavigateToInventoryCommand = new RelayCommand(p => { });
         }
-
 
         private async void ExecuteLoadDashboardData(object parameter)
         {
             try
             {
-                // 1. Cargar Ventas y Pedidos del Día
                 await LoadVentasPedidosAsync();
-
-                // 2. Cargar Alertas de Stock
                 await LoadAlertasStockAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar datos del dashboard: {ex.Message}", "Error de Carga", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    $"Error al cargar datos del dashboard: {ex.Message}",
+                    "Error de Carga",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
                 VentasDelDia = 0m;
                 PedidosDelDia = 0;
                 AlertasDeStock = 0;
             }
         }
 
-        // Lógica para obtener ventas y pedidos usando Supabase.Client directamente
         private async Task LoadVentasPedidosAsync()
         {
-            // Obtener todos los pedidos
             var response = await _client.From<Pedido>().Get();
             var todosLosPedidos = response.Models;
 
-            // Filtrar por la fecha de hoy y estado "Pagado"
             var pedidosDelDiaPagados = todosLosPedidos
                 .Where(p => p.Fecha.Date == DateTime.Today.Date && p.Estado == "Pagado")
                 .ToList();
 
-            // Usamos la propiedad 'Total' según tu PedidoService
             VentasDelDia = pedidosDelDiaPagados.Sum(p => p.Total);
             PedidosDelDia = pedidosDelDiaPagados.Count;
         }
 
-        // Lógica para obtener alertas de stock usando Supabase.Client directamente
         private async Task LoadAlertasStockAsync(int limiteStockBajo = 5)
         {
-            // Obtener todos los insumos
-            // ** NOTA: Asumo que el modelo de Insumo está en Negocio/Modelos
             var response = await _client.From<Insumo>().Get();
             var insumos = response.Models;
 
-            // Contar aquellos cuya cantidad en stock es menor o igual al límite (usamos StockActual)
             AlertasDeStock = insumos
-                // ** Usamos StockActual, como se ve en tu PedidoService al descontar stock **
                 .Count(i => i.StockActual <= limiteStockBajo);
         }
-
     }
 }

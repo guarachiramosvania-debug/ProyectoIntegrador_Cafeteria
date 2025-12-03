@@ -101,7 +101,7 @@ namespace CoffeTime.Presentacion.Views
             dgDetalle.ItemsSource = null;
             dgDetalle.ItemsSource = _detalle;
 
-            TxtTotal.Text = "$" + _detalle.Sum(d => d.Subtotal).ToString("0.00");
+            TxtTotal.Text = "Bs " + _detalle.Sum(d => d.Subtotal).ToString("0.00");
         }
 
         // ======================================================

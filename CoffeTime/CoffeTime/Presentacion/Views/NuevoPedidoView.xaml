@@ -79,7 +79,7 @@
                                                 Binding="{Binding Categoria}"
                                                 Width="120"/>
                             <DataGridTextColumn Header="Precio"
-                                                Binding="{Binding Precio, StringFormat='${0:F2}'}"
+                                                Binding="{Binding Precio, StringFormat='Bs {0:F2}'}"
                                                 Width="90"/>
 
                             <DataGridTemplateColumn Header="">
@@ -133,10 +133,10 @@
                                                 Binding="{Binding Cantidad}"
                                                 Width="60"/>
                             <DataGridTextColumn Header="Precio"
-                                                Binding="{Binding Precio, StringFormat='${0:F2}'}"
+                                                Binding="{Binding Precio, StringFormat='Bs {0:F2}'}"
                                                 Width="80"/>
                             <DataGridTextColumn Header="Subtotal"
-                                                Binding="{Binding Subtotal, StringFormat='${0:F2}'}"
+                                                Binding="{Binding Subtotal, StringFormat='Bs {0:F2}'}"
                                                 Width="90"/>
                         </DataGrid.Columns>
                     </DataGrid>
