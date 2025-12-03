@@ -16,9 +16,7 @@ using CoffeTime.Presentacion.Views;
 
 namespace CoffeTime.Presentacion.Views
 {
-    // =========================================================
-    // CODE-BEHIND DE LA VISTA (DashboardView.xaml.cs)
-    // =========================================================
+  
     public partial class DashboardView : Window
     {
         public DashboardView()
@@ -61,12 +59,12 @@ namespace CoffeTime.Presentacion.Views
             }
         }
 
-        // 🎯 1b. NAVEGACIÓN A NUEVO PEDIDO (Botón Rápido)
+        // 🎯 1b. NAVEGACIÓN A NUEVO PEDIDO
         private void AbrirNuevoPedidoView()
         {
             try
             {
-                // Abre la ventana de Nuevo Pedido (la solicitada)
+                // Abre la ventana de Nuevo Pedido 
                 NuevoPedidoView nuevoPedidoWindow = new NuevoPedidoView();
                 nuevoPedidoWindow.Show();
                 this.Close();
