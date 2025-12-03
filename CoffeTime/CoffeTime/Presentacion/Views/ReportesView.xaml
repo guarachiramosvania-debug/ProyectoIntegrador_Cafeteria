@@ -20,7 +20,7 @@
         <components:Header Grid.Row="0"/>
 
 
-      
+
 
 
         <ScrollViewer Grid.Row="1">
@@ -38,9 +38,8 @@
                             Padding="15" BorderBrush="#F1D5A5" BorderThickness="1">
                         <StackPanel>
                             <TextBlock Text="Ventas Totales" FontWeight="Bold" Foreground="#8B5E34"/>
-                            <TextBlock x:Name="txtVentasTotales" 
-                                       FontSize="22" FontWeight="Bold" Margin="0,5,0,0"
-                                       Foreground="#E0912D"/>
+                            <TextBlock x:Name="txtVentasTotales" FontSize="22" FontWeight="Bold" Margin="0,5,0,0" Foreground="#E0912D"
+                                   Text="{Binding TotalVentas, StringFormat='Bs {0:N2}'}"/>
                             <TextBlock Text="Desde el inicio" FontSize="11" Foreground="Gray"/>
                         </StackPanel>
                     </Border>
@@ -60,9 +59,8 @@
                             Padding="15" BorderBrush="#F1D5A5" BorderThickness="1">
                         <StackPanel>
                             <TextBlock Text="Ticket Promedio" FontWeight="Bold" Foreground="#8B5E34"/>
-                            <TextBlock x:Name="txtTicketPromedio" 
-                                       FontSize="22" FontWeight="Bold" Margin="0,5,0,0"
-                                       Foreground="#E0912D"/>
+                            <TextBlock x:Name="txtTicketPromedio" FontSize="22" FontWeight="Bold" Margin="0,5,0,0" Foreground="#E0912D"
+                                   Text="{Binding TicketPromedio, StringFormat='Bs {0:N2}'}"/>
                             <TextBlock Text="Por pedido" FontSize="11" Foreground="Gray"/>
                         </StackPanel>
                     </Border>
@@ -93,7 +91,7 @@
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat='dd/MM/yyyy'}" Width="*"/>
                                     <DataGridTextColumn Header="Pedidos" Binding="{Binding CantidadPedidos}" Width="*"/>
-                                    <DataGridTextColumn Header="Total" Binding="{Binding TotalVentas, StringFormat=C2}" Width="*"/>
+                                    <DataGridTextColumn Header="Total" Binding="{Binding TotalVentas, StringFormat='Bs {0:N2}'}" Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
@@ -109,7 +107,7 @@
                                     <DataGridTextColumn Header="#" Binding="{Binding Posicion}" Width="50"/>
                                     <DataGridTextColumn Header="Producto" Binding="{Binding NombreProducto}" Width="*"/>
                                     <DataGridTextColumn Header="Vendidos" Binding="{Binding CantidadVendida}" Width="*"/>
-                                    <DataGridTextColumn Header="Total" Binding="{Binding MontoTotal, StringFormat=C2}" Width="*"/>
+                                    <DataGridTextColumn Header="Total" Binding="{Binding MontoTotal, StringFormat='Bs {0:N2}'}" Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
@@ -136,7 +134,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Mes" Binding="{Binding MesNombre}" Width="*"/>
                                 <DataGridTextColumn Header="Pedidos" Binding="{Binding CantidadPedidos}" Width="*"/>
-                                <DataGridTextColumn Header="Total" Binding="{Binding TotalVentas, StringFormat=C2}" Width="*"/>
+                                <DataGridTextColumn Header="Total" Binding="{Binding TotalVentas, StringFormat='Bs {0:N2}'}" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
 

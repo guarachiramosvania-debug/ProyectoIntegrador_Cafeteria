@@ -9,7 +9,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoffeTime.Datos.Conexion;
 using Supabase;
-using CoffeTime.Datos.Repositorios; // Asegúrate de que existe UsuarioRepository
+using CoffeTime.Datos.Repositorios;
+// Asegúrate de que las siguientes vistas existen o ajústalas a tu proyecto
+using CoffeTime.Presentacion.Views;
+// Se asume que tienes PedidosView, InventarioView y NuevoPedidoView
 
 namespace CoffeTime.Presentacion.Views
 {
@@ -42,11 +45,12 @@ namespace CoffeTime.Presentacion.Views
             }
         }
 
-        // 🎯 1. NAVEGACIÓN A PEDIDOS (Acceso Rápido y Nuevo Pedido Rápido)
+        // 🎯 1a. NAVEGACIÓN A PEDIDOS (Acceso Rápido)
         private void AbrirPedidosView()
         {
             try
             {
+                // Abre la ventana principal de Pedidos
                 PedidosView pedidosWindow = new PedidosView();
                 pedidosWindow.Show();
                 this.Close();
@@ -57,14 +61,31 @@ namespace CoffeTime.Presentacion.Views
             }
         }
 
+        // 🎯 1b. NAVEGACIÓN A NUEVO PEDIDO (Botón Rápido)
+        private void AbrirNuevoPedidoView()
+        {
+            try
+            {
+                // Abre la ventana de Nuevo Pedido (la solicitada)
+                NuevoPedidoView nuevoPedidoWindow = new NuevoPedidoView();
+                nuevoPedidoWindow.Show();
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al abrir la ventana de Nuevo Pedido: " + ex.Message, "Error de Navegación", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void btnAccesoPedidos_Click(object sender, RoutedEventArgs e)
         {
             AbrirPedidosView();
         }
 
+        // 🚨 MODIFICADO: Ahora abre la vista NuevoPedidoView
         private void btnNuevoPedidoRapido_Click(object sender, RoutedEventArgs e)
         {
-            AbrirPedidosView();
+            AbrirNuevoPedidoView();
         }
 
 
@@ -100,17 +121,17 @@ namespace CoffeTime.Presentacion.Views
     }
 
 
-    
+    // =========================================================
+    // VIEWMODEL DEL DASHBOARD
+    // =========================================================
     public class DashboardViewModel : ViewModelBase
     {
-        
+
         // Conexión directa a Supabase
-        
         private readonly Supabase.Client _client = SupabaseContext.Client;
 
-        
+
         // Propiedades de Datos (Dashboard Cards)
-        
         private decimal _ventasDelDia;
         public decimal VentasDelDia
         {
@@ -132,7 +153,7 @@ namespace CoffeTime.Presentacion.Views
             set { _alertasDeStock = value; OnPropertyChanged(); }
         }
 
-        
+
         public ICommand LoadDashboardDataCommand { get; private set; }
         public ICommand NewQuickOrderCommand { get; private set; }
         public ICommand NavigateToOrdersCommand { get; private set; }
@@ -144,6 +165,7 @@ namespace CoffeTime.Presentacion.Views
 
             // Comandos de navegación se mantienen enlazados aunque la lógica esté en el Code-Behind
             NavigateToOrdersCommand = new RelayCommand(p => { /* Lógica en Code-Behind */ });
+            // NewQuickOrderCommand enlaza al botón que tiene el click event en el Code-Behind
             NewQuickOrderCommand = new RelayCommand(p => { /* Lógica en Code-Behind */ });
             NavigateToInventoryCommand = new RelayCommand(p => { /* Lógica en Code-Behind */ });
         }

@@ -6,8 +6,8 @@ using System.IO;
 using System.Text;
 using Microsoft.Win32;
 using System.Threading.Tasks;
-// Asegúrate de que tu Repositorio de Usuario sea accesible (asumo que está en Datos.Repositorios)
 using CoffeTime.Datos.Repositorios;
+using System.Globalization; // Necesario para el formato de moneda en el Code-Behind
 
 namespace CoffeTime.Presentacion.Views
 {
@@ -22,31 +22,39 @@ namespace CoffeTime.Presentacion.Views
         private List<ProductoMasVendidoReporteTupla> _productosVendidos;
         private List<VentaMensualReporteTupla> _ventasMensuales = new List<VentaMensualReporteTupla>();
 
+        // Definimos un CultureInfo para el formato Boliviano (Bs)
+        private readonly CultureInfo bolivianCulture = new CultureInfo("es-BO");
 
         public ReportesView()
         {
             InitializeComponent();
+
+            // Lógica de Permisos
             if (!PermisosService.EsAdmin())
             {
                 MessageBox.Show("No tienes permisos para acceder a esta sección.");
-                this.Tag = "DENIED"; // marcar que NO debe abrirse
+                this.Tag = "DENIED";
                 return;
             }
+
+            // Establecer el símbolo de moneda para el contexto local (seguridad adicional)
+            bolivianCulture.NumberFormat.CurrencySymbol = "Bs";
+
+            // Inicializar el año para el reporte mensual
+            txtAnioReportes.Text = DateTime.Today.Year.ToString();
 
             // Enlazar eventos (si no están ya enlazados en el XAML)
             btnExportarReporte.Click += BtnExportarReporte_Click;
             btnCargarVentasMensuales.Click += BtnCargarVentasMensuales_Click;
 
-            // Inicializar el año para el reporte mensual
-            txtAnioReportes.Text = DateTime.Today.Year.ToString();
-
+            // Iniciar la carga de datos y el estado Online
             CargarDatos();
             MantenerUsuarioOnline();
         }
 
         private async void MantenerUsuarioOnline()
         {
-            // Lógica para mantener el estado de usuario online (se mantiene como la definiste)
+            // Lógica para mantener el estado de usuario online
             if (App.Current.Properties["IdUsuario"] is long id)
             {
                 var usuario = await usuarioRepo.ObtenerPorIdAsync(id);
@@ -54,7 +62,6 @@ namespace CoffeTime.Presentacion.Views
                 if (usuario != null)
                 {
                     usuario.Online = true;
-                    // Asegúrate de que tu método de repositorio acepta el long y el bool
                     await usuarioRepo.ActualizarOnlineAsync(usuario.IdUsuario, true);
                 }
             }
@@ -64,28 +71,46 @@ namespace CoffeTime.Presentacion.Views
         {
             try
             {
-                // 1. Cargar Resumen General (Tupla)
-                _resumen = await _service.ObtenerResumenGeneralAsync();
-                txtVentasTotales.Text = $"{_resumen.TotalVentas:C2}";
-                txtTotalPedidos.Text = _resumen.TotalPedidos.ToString();
-                txtTicketPromedio.Text = $"{_resumen.TicketPromedio:C2}";
+                // Obtener el año para el reporte mensual
+                if (!int.TryParse(txtAnioReportes.Text, out int anio))
+                {
+                    MessageBox.Show("Por favor, ingrese un año válido (ej: 2025).", "Error de Entrada", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-                // 2. Cargar Ventas por Día (Lista de tuplas)
-                _ventasDiarias = await _service.ObtenerVentasPorDiaAsync();
+        
+
+                
+                var resumenTask = _service.ObtenerResumenGeneralAsync();
+                var ventasDiariasTask = _service.ObtenerVentasPorDiaAsync();
+                var productosVendidosTask = _service.ObtenerProductosMasVendidosAsync();
+                var ventasMensualesTask = _service.ObtenerVentasMensualesAsync(anio);
+
+                
+                await Task.WhenAll(resumenTask, ventasDiariasTask, productosVendidosTask, ventasMensualesTask);
+
+                // 1. Asignar Resumen General (Tupla)
+                _resumen = resumenTask.Result;
+                // Usamos el formato explícito para asegurar 'Bs' 
+                txtVentasTotales.Text = $"Bs {_resumen.TotalVentas:N2}";
+                txtTotalPedidos.Text = _resumen.TotalPedidos.ToString();
+                txtTicketPromedio.Text = $"Bs {_resumen.TicketPromedio:N2}";
+
+                // 2. Asignar Ventas por Día (Lista de tuplas)
+                _ventasDiarias = ventasDiariasTask.Result;
                 dgVentasPorDia.ItemsSource = _ventasDiarias;
 
-                // 3. Cargar Productos Más Vendidos (Lista de tuplas)
-                _productosVendidos = await _service.ObtenerProductosMasVendidosAsync();
+                // 3. Asignar Productos Más Vendidos (Lista de tuplas)
+                _productosVendidos = productosVendidosTask.Result;
                 dgProductosMasVendidos.ItemsSource = _productosVendidos;
 
-                // 4. Cargar Reporte Mensual (Inicialmente con el año actual)
-                if (int.TryParse(txtAnioReportes.Text, out int anio))
-                {
-                    await CargarReporteMensual(anio);
-                }
+                // 4. Asignar Reporte Mensual
+                _ventasMensuales = ventasMensualesTask.Result;
+                dgVentasMensuales.ItemsSource = _ventasMensuales;
             }
             catch (Exception ex)
             {
+                // Mostrar un mensaje de error si alguna de las tareas falla
                 MessageBox.Show($"Error al cargar datos del reporte: {ex.Message}", "Error de Carga", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -107,7 +132,6 @@ namespace CoffeTime.Presentacion.Views
         {
             try
             {
-                // Usamos el servicio modificado que acepta el año
                 _ventasMensuales = await _service.ObtenerVentasMensualesAsync(anio);
                 dgVentasMensuales.ItemsSource = _ventasMensuales;
             }
@@ -153,7 +177,7 @@ namespace CoffeTime.Presentacion.Views
             }
         }
 
-        // Método auxiliar para formatear los datos en el TXT
+        
         private string GenerarContenidoReporte()
         {
             StringBuilder sb = new StringBuilder();
@@ -168,10 +192,10 @@ namespace CoffeTime.Presentacion.Views
 
             // --- RESUMEN GENERAL ---
             sb.AppendLine("--- RESUMEN GENERAL ---");
-            // Usamos las variables de clase para asegurar el formato correcto
-            sb.AppendLine($"Ventas Totales: {_resumen.TotalVentas:C2}");
+            
+            sb.AppendLine($"Ventas Totales: Bs {_resumen.TotalVentas:N2}");
             sb.AppendLine($"Total de Pedidos: {_resumen.TotalPedidos}");
-            sb.AppendLine($"Ticket Promedio: {_resumen.TicketPromedio:C2}");
+            sb.AppendLine($"Ticket Promedio: Bs {_resumen.TicketPromedio:N2}");
             sb.Append(linea);
             sb.AppendLine();
 
@@ -180,8 +204,8 @@ namespace CoffeTime.Presentacion.Views
             sb.AppendLine(string.Format("{0,-15} {1,-10} {2,-15}", "Fecha", "Pedidos", "Total"));
             foreach (var item in _ventasDiarias)
             {
-                // Usar :N2 para formato numérico de dos decimales para la exportación simple
-                sb.AppendLine(string.Format("{0,-15} {1,-10} {2,-15:N2}", item.Fecha.ToShortDateString(), item.CantidadPedidos, item.TotalVentas));
+                
+                sb.AppendLine(string.Format("{0,-15} {1,-10} Bs {2,-12:N2}", item.Fecha.ToShortDateString(), item.CantidadPedidos, item.TotalVentas));
             }
             sb.Append(linea);
             sb.AppendLine();
@@ -191,7 +215,8 @@ namespace CoffeTime.Presentacion.Views
             sb.AppendLine(string.Format("{0,-5} {1,-30} {2,-10} {3,-15}", "Pos.", "Producto", "Vendidos", "Total"));
             foreach (var item in _productosVendidos)
             {
-                sb.AppendLine(string.Format("{0,-5} {1,-30} {2,-10} {3,-15:N2}", item.Posicion, item.NombreProducto, item.CantidadVendida, item.MontoTotal));
+                
+                sb.AppendLine(string.Format("{0,-5} {1,-30} {2,-10} Bs {3,-12:N2}", item.Posicion, item.NombreProducto, item.CantidadVendida, item.MontoTotal));
             }
             sb.Append(linea);
             sb.AppendLine();
@@ -201,7 +226,8 @@ namespace CoffeTime.Presentacion.Views
             sb.AppendLine(string.Format("{0,-15} {1,-10} {2,-15}", "Mes", "Pedidos", "Total"));
             foreach (var item in _ventasMensuales)
             {
-                sb.AppendLine(string.Format("{0,-15} {1,-10} {2,-15:N2}", item.MesNombre, item.CantidadPedidos, item.TotalVentas));
+                
+                sb.AppendLine(string.Format("{0,-15} {1,-10} Bs {2,-12:N2}", item.MesNombre, item.CantidadPedidos, item.TotalVentas));
             }
             sb.Append(separador);
 
