@@ -131,11 +131,13 @@ namespace CoffeTime.Presentacion.Views
                     Nombre = i.Nombre,
                     Proveedor = proveedor?.Nombre ?? "—",
                     Stock = i.StockActual,
+                    UnidadMedida = i.UnidadMedida, // 👈 NUEVO CAMPO
                     Minimo = i.StockMinimo,
                     Estado = i.StockActual < i.StockMinimo ? "Alerta" : "OK"
                 };
             }).ToList();
         }
+
 
 
         private void TxtBuscar_TextChanged(object sender, TextChangedEventArgs e)

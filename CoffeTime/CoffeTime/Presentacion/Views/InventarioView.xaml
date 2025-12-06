@@ -119,19 +119,26 @@
 
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Insumo"
-                                                Binding="{Binding Nombre}"
-                                                Width="*"/>
-                            <DataGridTextColumn Header="Proveedor" Binding="{Binding Proveedor}" Width="150"/>
+                        Binding="{Binding Nombre}"
+                        Width="*"/>
+
+                            <DataGridTextColumn Header="Proveedor"
+                        Binding="{Binding Proveedor}"
+                        Width="150"/>
 
                             <DataGridTextColumn Header="Stock"
-                                                Binding="{Binding Stock}"
-                                                Width="90"/>
+                        Binding="{Binding Stock}"
+                        Width="90"/>
+
+                            <!-- NUEVA COLUMNA -->
+                            <DataGridTextColumn Header="Unidad"
+                        Binding="{Binding UnidadMedida}"
+                        Width="100"/>
 
                             <DataGridTextColumn Header="Mínimo"
-                                                Binding="{Binding Minimo}"
-                                                Width="90"/>
+                        Binding="{Binding Minimo}"
+                        Width="90"/>
 
-                            <!-- Estado como chip de color sin converters -->
                             <DataGridTemplateColumn Header="Estado" Width="90">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
